@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="Mouse0w0">
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>24 hud revisited - Lwjglbook中文翻译</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "24 hud revisited";
+    var mkdocs_page_input_path = "24-hud-revisited.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Lwjglbook中文翻译</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../01-first-steps/">事前准备（First Steps）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../02-the-game-loop/">游戏循环（The Game Loop）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../03-a-brief-about-coordinates/">坐标简介（A brief about coordinates）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../04-rendering/">渲染（Rendering）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../05-more-on-rendering/">更多关于渲染的事情（More on Rendering）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../06-transformations/">变换（Transformations）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../07-textures/">纹理（Textures）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../08-camera/">摄像机（Camera）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../09-loading-more-complex-models/">加载更复杂的模型（Loading more complex models）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../10-let-there-be-light/">要有光（Let there be light）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../11-let-there-be-even-more-light/">要有更多的光（Let there be even more light）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../12-game-hud/">游戏HUD（Game HUD）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../13-sky-box-and-some-optimizations/">天空盒与一些优化 (Sky Box and some optimizations)</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../14-height-maps/">高度图（Height Maps）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../15-terrain-collisions/">地形碰撞 (Terrain Collisions)</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../16-fog/">雾 (Fog)</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../17-normal-mapping/">法线贴图（Normal Mapping）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../18-shadows/">阴影（Shadows）</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Lwjglbook中文翻译</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>24 hud revisited</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/Mouse0w0/lwjglbook-CN-Translation/edit/master/docs/24-hud-revisited.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="hud-nanovg">HUD 重温 - NanoVG</h1>
+<p>在之前的章节中，解释了如何使用正交投影在场景的顶部渲染形状和纹理。 在本章中，我们将学习如何使用 <a href="https://github.com/memononen/nanovg">NanoVG</a> 库来渲染反锯齿矢量图形，以简单的方式构建更复杂的HUD。</p>
+<p>还有很多其他库可用于支持此任务，例如<a href="https://github.com/nifty-gui/nifty-gui">Nifty GUI</a>，<a href="https://github.com/vurtun/nuklear">Nuklear</a>等。在本章中，将重点介绍Nanovg，因为它非常易于使用，但如果您想制作菜单和窗口，开发出复杂的GUI按钮交互，您应该查看<a href="https://github.com/nifty-gui/nifty-gui">Nifty GUI</a>。</p>
+<p>开始使用<a href="https://github.com/memononen/nanovg">NanoVG</a> 的第一步是在<code>pom.xml</code>文件中添加依赖关系<script type="math/tex">一个用于编译时需要的依赖项，另一个用于编译时需要的依赖项 为运行时所需的本机</script>。</p>
+<pre><code class="xml">...
+&lt;dependency&gt;
+    &lt;groupId&gt;org.lwjgl&lt;/groupId&gt;
+    &lt;artifactId&gt;lwjgl-nanovg&lt;/artifactId&gt;
+    &lt;version&gt;${lwjgl.version}&lt;/version&gt;
+&lt;/dependency&gt;
+...
+&lt;dependency&gt;
+    &lt;groupId&gt;org.lwjgl&lt;/groupId&gt;
+    &lt;artifactId&gt;lwjgl-nanovg&lt;/artifactId&gt;
+    &lt;version&gt;${lwjgl.version}&lt;/version&gt;
+    &lt;classifier&gt;${native.target}&lt;/classifier&gt;
+    &lt;scope&gt;runtime&lt;/scope&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<p>在我们开始使用<a href="https://github.com/memononen/nanovg">NanoVG</a>之前，我们必须在OpenGL里面设置一些东西，这样代码测试样本才能正常工作。 我们需要启用对模板缓冲区测试的支持。 到现在为止，已经讨论了颜色和深度缓冲区，但是我们没有提到模板缓冲区。 该缓冲区为每个像素存储一个值<script type="math/tex">an integer</script>
+<script type="math/tex">整数值</script>，该像素用于控制应该绘制哪些像素。 该缓冲区用于根据其存储的值屏蔽或丢弃绘图区域。 例如，它可以用于以简单的方式剪切场景的某些部分。 我们通过将这一行添加到<code>Window</code>类<script type="math/tex">after we enable depth testing</script>
+<script type="math/tex">在启用深度测试后</script>来启用模板缓冲区测试：</p>
+<pre><code class="java">glEnable(GL_STENCIL_TEST);
+</code></pre>
+
+<p>由于程序正在使用另一个缓冲区，因此我们在每次渲染调用之前还必须注意删除其值。 因此，需要修改<code>Renderer</code>类的clear方法</p>
+<pre><code class="java">public void clear() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+}
+</code></pre>
+
+<p>我们还将添加一个用于激活抗锯齿的新窗口选项。 因此，在Window类中，将通过以下方式启用它：</p>
+<pre><code class="java">if (opts.antialiasing) {
+    glfwWindowHint(GLFW_SAMPLES, 4);
+}
+</code></pre>
+
+<p>现在我们准备使用<a href="https://github.com/memononen/nanovg">NanoVG</a>库。 我们要做的第一件事就是丢弃已经创建的HUD作品，那就是<code>IHud</code>接口的着色器，<code>Renderer</code>类中的HUD渲染方法等。你可以在源代码中找到这一点。</p>
+<p>在这种情况下，新的<code>Hud</code>类会照顾它的渲染，所以我们不需要将它委托给<code>Renderer</code>类。 让我们通过定义该类来开始讨论，它将有一个<code>init</code>方法来设置构建HUD所需的库和资源。 该方法是这样定义的：</p>
+<pre><code class="java">public void init(Window window) throws Exception {
+    this.vg = window.getOptions().antialiasing ? nvgCreate(NVG_ANTIALIAS | NVG_STENCIL_STROKES) : nvgCreate(NVG_STENCIL_STROKES);
+    if (this.vg == NULL) {
+        throw new Exception(&quot;Could not init nanovg&quot;);
+    }
+
+    fontBuffer = Utils.ioResourceToByteBuffer(&quot;/fonts/OpenSans-Bold.ttf&quot;, 150 * 1024);
+    int font = nvgCreateFontMem(vg, FONT_NAME, fontBuffer, 0);
+    if (font == -1) {
+        throw new Exception(&quot;Could not add font&quot;);
+    }
+    colour = NVGColor.create();
+
+    posx = MemoryUtil.memAllocDouble(1);
+    posy = MemoryUtil.memAllocDouble(1);
+
+    counter = 0;
+}
+</code></pre>
+
+<p>我们要做的第一件事就是创建一个NanoVG环境。 在这种情况下，我们使用的是OpenGL3.0 后端，因为引用了<code>org.lwjgl.nanovg.NanoVGGL3</code>来命名空间。 如果要激活抗锯齿功能先得激活<code>NVG_ANTIALIAS</code>标志。</p>
+<p>接下来，我们使用先前加载到 <code>ByteBuffer</code> 中的True Type(全真字体)来创建。 给它分配一个名称，以便稍后在呈现文本时使用它。 其中一个重要的事情是，在使用字体时，用于加载字体的<code>ByteBuffer</code>必须保存在内存中。 也就是说，它不能被垃圾收集，除非你有一个很好的核心转储它。 这就是为什么它作为类属性存储的原因。</p>
+<p>然后，我们创建一个颜色实例和一些有用的变量，这些变量将在渲染时使用。 在渲染初始化之前，该方法在游戏<code>init</code>方法中被调用：</p>
+<pre><code class="java">@Override
+public void init(Window window) throws Exception {
+    hud.init(window);
+    renderer.init(window);
+    ...
+</code></pre>
+
+<p><code>Hud</code>类还定义了一个渲染方法，在场景渲染完成之后应该调用这个渲染方法，这样HUD也会同时被绘制。</p>
+<pre><code class="java">@Override
+public void render(Window window) {
+    renderer.render(window, camera, scene);
+    hud.render(window);
+}
+</code></pre>
+
+<p>Hud类的<code>render</code>方法是从这里开始的：</p>
+<pre><code class="java">public void render(Window window) {
+    nvgBeginFrame(vg, window.getWidth(), window.getHeight(), 1);
+</code></pre>
+
+<p>我们必须做的第一件事就是调用<code>nvgBeginFrame</code>方法。 <code>nvgBeginFrame``  method.  所有的NanoVG渲染操作都必须包含在两个之中</code>nvgBeginFrame<code>与</code>nvgEndFrame<code>.\</code>``根据以下参数：</p>
+<ul>
+<li>NanoVG的文本</li>
+<li>要渲染的窗口的大小 <script type="math/tex">宽度和高度</script>.<script type="math/tex">width an height</script>.</li>
+<li>
+<p>像素比例。 如果您需要Hi-DPI的支持，则可以更改这个值。 对于这个示例，我们将它设置为1。</p>
+<p>然后我们创建几个条子，它会占据整个屏幕。 第一个是这样画的：</p>
+</li>
+</ul>
+<pre><code class="java">// Upper ribbon
+nvgBeginPath(vg);
+nvgRect(vg, 0, window.getHeight() - 100, window.getWidth(), 50);
+nvgFillColor(vg, rgba(0x23, 0xa1, 0xf1, 200, colour));
+nvgFill(vg);
+</code></pre>
+
+<p>渲染一个形状时，第一个应该调用的方法是<code>nvgBeginPath</code>，它指示NanoVG开始绘制一个新的形状。 然后我们定义要绘制的内容，矩形，填充颜色以及调用我们绘制的<code>nvgFill</code>。</p>
+<p>您可以查看源代码的其余部分，以查看其余形状的绘制方式。 在渲染字体之前，不需要调用 nvgBeginPath。</p>
+<p>在完成绘制所有形状之后，我们只需调用<code>nvgEndFrame</code>来结束渲染，但在离开该方法之前还有一件重要的事情要做。 我们必须恢复OpenGL状态。 NanoVG修改OpenGL状态以执行其操作，如果状态未正确恢复，您可能会看到场景未正确呈现或者甚至已被消除。 因此，我们需要恢复我们渲染所需的相关OpenGL状态。 这是在<code>Window</code>类中委托的：</p>
+<pre><code class="java">// Restore state
+window.restoreState();
+</code></pre>
+
+<pre><code>该方法是这样定义的:
+</code></pre>
+<pre><code class="java">public void restoreState() {
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_STENCIL_TEST);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    if (opts.cullFace) {
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+    }
+}
+</code></pre>
+
+<p>这就是所有的<script type="math/tex">除了一些其他的方法来清除</script>
+<script type="math/tex">besides some additional methods to clear things up</script>，代码完成。 当你执行这个样本时，你会得到如下的结果：</p>
+<p><img alt="HUD" src="../_static/24/hud.png" /></p>
+              
+            </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>2019, Mouse0w0</p>
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/Mouse0w0/lwjglbook-CN-Translation/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" defer></script>
+      <script src="../search/main.js" defer></script>
+
+</body>
+</html>

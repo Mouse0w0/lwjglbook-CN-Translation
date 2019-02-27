@@ -1,2 +1,0 @@
-pymdown-extensions
-python-markdown-math
