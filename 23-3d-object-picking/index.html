@@ -223,7 +223,7 @@
 <pre><code class="glsl">in float outSelected;
 </code></pre>
 
-<p>然后，在片元着色器的结尾，我们将修改最终的片元颜色，如果选中，则将蓝色分量设置为<script type="math/tex; mode=display">1</script>.</p>
+<p>然后，在片元着色器的结尾，我们将修改最终的片元颜色，如果选中，则将蓝色分量设置为<script type="math/tex">1</script>.</p>
 <pre><code class="glsl">if ( outSelected &gt; 0 ) {
     fragColor = vec4(fragColor.x, fragColor.y, 1, 1);
 }
@@ -312,16 +312,16 @@ this.selectDetector.selectGameItem(gameItems, camera);
 <h2 id="_2">鼠标选取</h2>
 <p>用摄像机选取物体完成了，但当我们想用鼠标自由选择物体怎么办？在此情况下，我们希望每当用户单击屏幕时，自动选择最近的对象。</p>
 <p>实现它的方法类似于上述方法。在之前的方法中，我们得到了摄像机的位置，并根据摄像机当前的方向使用“前向”方向从摄像机生成射线。在此情况下，我们仍需要投射广西，但方向指向一个远离摄像机的点，也就是点击的点。在本例中，我们需要使用点击的坐标来计算方向向量。</p>
-<p>但是，我们如何将视口空间中的<script type="math/tex; mode=display">(x,y)</script>坐标变换到世界空间呢？让我们回顾一下如何从模型空间坐标变换到观察空间。为了达到这个目的，所应用的不同坐标变换是：</p>
+<p>但是，我们如何将视口空间中的<script type="math/tex">(x,y)</script>坐标变换到世界空间呢？让我们回顾一下如何从模型空间坐标变换到观察空间。为了达到这个目的，所应用的不同坐标变换是：</p>
 <ul>
 <li>我们使用模型矩阵将模型坐标变换到世界坐标。</li>
 <li>我们使用观察矩阵（提供摄像机功能）将世界坐标转换到观察空间坐标。</li>
 <li>我们通过应用透视投影矩阵将观察坐标变换到齐次裁剪空间（Homogeneous Clip Space）。</li>
-<li>最终的屏幕坐标由OpenGL为我们自动计算。在此之前，它传递到归一化的终端空间（通过将<script type="math/tex; mode=display">x,y,z</script>坐标除以<script type="math/tex; mode=display">w</script>分量），然后传递到<script type="math/tex; mode=display">x,y</script>屏幕坐标。</li>
+<li>最终的屏幕坐标由OpenGL为我们自动计算。在此之前，它传递到归一化的终端空间（通过将<script type="math/tex">x,y,z</script>坐标除以<script type="math/tex">w</script>分量），然后传递到<script type="math/tex">x,y</script>屏幕坐标。</li>
 </ul>
-<p>所以我们只需要从屏幕坐标<script type="math/tex; mode=display">(x,y)</script>到世界坐标，逆路径遍历。</p>
-<p>第一步是将屏幕坐标转换为归一化的终端空间。视口空间中的<script type="math/tex; mode=display">(x,y)</script>坐标的范围是<script type="math/tex; mode=display">[0, 屏幕宽度]</script>
-<script type="math/tex; mode=display">[0, 屏幕高度]</script>。屏幕左上角的坐标为<script type="math/tex; mode=display">(0, 0)</script>。我们需要将其转换为<script type="math/tex; mode=display">[-1, 1]</script>范围内的坐标。</p>
+<p>所以我们只需要从屏幕坐标<script type="math/tex">(x,y)</script>到世界坐标，逆路径遍历。</p>
+<p>第一步是将屏幕坐标转换为归一化的终端空间。视口空间中的<script type="math/tex">(x,y)</script>坐标的范围是<script type="math/tex">[0, 屏幕宽度]</script>
+<script type="math/tex">[0, 屏幕高度]</script>。屏幕左上角的坐标为<script type="math/tex">(0, 0)</script>。我们需要将其转换为<script type="math/tex">[-1, 1]</script>范围内的坐标。</p>
 <p><img alt="屏幕坐标到归一化终端空间" src="../_static/23/screen_coordinates.png" /></p>
 <p>很简单的数学：</p>
 <p>
@@ -330,12 +330,12 @@ this.selectDetector.selectGameItem(gameItems, camera);
 <p>
 <script type="math/tex; mode=display">y = 1 - 2 * screen_y / screenheight</script>
 </p>
-<p>但是，我们如何计算<script type="math/tex; mode=display">z</script>分量呢？答案很简单，我们只需给它分配<script type="math/tex; mode=display">-1</script>值，这样广西就可以指向最远的可见距离（请记住，在OpenGL中，<script type="math/tex; mode=display">-1</script>指向频幕）。现在我们有了归一化终端空间中的坐标。</p>
-<p>为了继续变换，我们需要将它们转换为齐次剪切空间。我们需要有一个<script type="math/tex; mode=display">w</script>分量，它使用齐次坐标。虽然这个概念在前几章已经介绍过了，但让我们再回顾它。为了表示一个三维点，我们需要<script type="math/tex; mode=display">x</script>，<script type="math/tex; mode=display">y</script>和<script type="math/tex; mode=display">z</script>分量，但是我们一直在处理一个额外的<script type="math/tex; mode=display">w</script>分量。我们需要这个额外的分量来使用矩阵执行不同的变换。有些变化不需要这个额外的分量，但有些变换需要。例如，如果我们只有<script type="math/tex; mode=display">x</script>，<script type="math/tex; mode=display">y</script>和<script type="math/tex; mode=display">z</script>分量，那么变换矩阵就不能工作。因此，我们添加了<script type="math/tex; mode=display">w</script>分量，并为它们赋值为<script type="math/tex; mode=display">1</script>，这样我们就可以处理4x4矩阵了。</p>
-<p>此外，大多数变换，或者更精确地说，大多数变换矩阵都不会更改<script type="math/tex; mode=display">w</script>分量。投影矩阵是一个例外，该矩阵将<script type="math/tex; mode=display">w</script>分量更改为与<script type="math/tex; mode=display">z</script>分量成比例。</p>
-<p>通过将<script type="math/tex; mode=display">x</script>，<script type="math/tex; mode=display">y</script>和<script type="math/tex; mode=display">z</script>分量处以<script type="math/tex; mode=display">w</script>，就可以实现从齐次裁剪空间到归一化的终端坐标的转换。由于这个分量与<script type="math/tex; mode=display">z</script>分量成比例，意味着远处的物体被画得更小。在本例中，需要反其道而行之，我们可以忽略这一步，只需要将<script type="math/tex; mode=display">w</script>分量设置为<script type="math/tex; mode=display">1</script>，并保留其它组件的原始值。</p>
+<p>但是，我们如何计算<script type="math/tex">z</script>分量呢？答案很简单，我们只需给它分配<script type="math/tex">-1</script>值，这样广西就可以指向最远的可见距离（请记住，在OpenGL中，<script type="math/tex">-1</script>指向频幕）。现在我们有了归一化终端空间中的坐标。</p>
+<p>为了继续变换，我们需要将它们转换为齐次剪切空间。我们需要有一个<script type="math/tex">w</script>分量，它使用齐次坐标。虽然这个概念在前几章已经介绍过了，但让我们再回顾它。为了表示一个三维点，我们需要<script type="math/tex">x</script>，<script type="math/tex">y</script>和<script type="math/tex">z</script>分量，但是我们一直在处理一个额外的<script type="math/tex">w</script>分量。我们需要这个额外的分量来使用矩阵执行不同的变换。有些变化不需要这个额外的分量，但有些变换需要。例如，如果我们只有<script type="math/tex">x</script>，<script type="math/tex">y</script>和<script type="math/tex">z</script>分量，那么变换矩阵就不能工作。因此，我们添加了<script type="math/tex">w</script>分量，并为它们赋值为<script type="math/tex">1</script>，这样我们就可以处理4x4矩阵了。</p>
+<p>此外，大多数变换，或者更精确地说，大多数变换矩阵都不会更改<script type="math/tex">w</script>分量。投影矩阵是一个例外，该矩阵将<script type="math/tex">w</script>分量更改为与<script type="math/tex">z</script>分量成比例。</p>
+<p>通过将<script type="math/tex">x</script>，<script type="math/tex">y</script>和<script type="math/tex">z</script>分量处以<script type="math/tex">w</script>，就可以实现从齐次裁剪空间到归一化的终端坐标的转换。由于这个分量与<script type="math/tex">z</script>分量成比例，意味着远处的物体被画得更小。在本例中，需要反其道而行之，我们可以忽略这一步，只需要将<script type="math/tex">w</script>分量设置为<script type="math/tex">1</script>，并保留其它组件的原始值。</p>
 <p>我们现在需要回到观察空间。这很简单，我们只需要计算投影矩阵的逆矩阵并将它与4个分量向量相乘。完成之后，我们就需要把它们转换成世界空间。同样，我们只需要使用观察矩阵，计算它的逆矩阵然后乘以向量。</p>
-<p>记住，我们只对方向感兴趣，因此，在本例中，我们将<script type="math/tex; mode=display">w</script>分量设置为<script type="math/tex; mode=display">0</script>。我们还可以将<script type="math/tex; mode=display">z</script>组件再次设置为<script type="math/tex; mode=display">-1</script>，因为我们希望它指向频幕。一旦这样做并应用逆矩阵，我们就得到了世界空间中的向量。我们计算了射线，可以使用与摄像机选取相同的算法。</p>
+<p>记住，我们只对方向感兴趣，因此，在本例中，我们将<script type="math/tex">w</script>分量设置为<script type="math/tex">0</script>。我们还可以将<script type="math/tex">z</script>组件再次设置为<script type="math/tex">-1</script>，因为我们希望它指向频幕。一旦这样做并应用逆矩阵，我们就得到了世界空间中的向量。我们计算了射线，可以使用与摄像机选取相同的算法。</p>
 <p>我们创建了一个名为<code>MouseBoxSelectionDetector</code>的新类，它实现了上述步骤。此外，我们将投影矩阵移动到<code>Window</code>类，所以我们可以在几个地方使用它们。我们还重构了一点<code>CameraBoxSelectionDetector</code>，所以<code>MouseBoxSelectionDetector</code>可以继承和使用碰撞检测方法。你可以直接查看源代码，因为实现非常简单。</p>
 <p>结果如下所示：</p>
 <p><img alt="鼠标选取" src="../_static/23/mouse_selection.png" /></p>
