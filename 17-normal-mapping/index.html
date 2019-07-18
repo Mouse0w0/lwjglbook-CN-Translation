@@ -169,6 +169,11 @@
     <a class="" href="../23-3d-object-picking/">三维物体选取（3D Object Picking）</a>
 	    </li>
           
+            <li class="toctree-l1">
+		
+    <a class="" href="../24-hud-revisited/">回顾HUD - NanoVG（HUD Revisited - NanoVG）</a>
+	    </li>
+          
         </ul>
       </div>
       &nbsp;
@@ -301,10 +306,10 @@ void main()
 </code></pre>
 
 <p>该函数有以下参数：
-<em> <code>Material</code>实例。
-</em> 顶点法线。
-<em> 纹理坐标。
-</em> 模型视图矩阵。</p>
+* <code>Material</code>实例。
+* 顶点法线。
+* 纹理坐标。
+* 模型视图矩阵。</p>
 <p>我们在此函数中做的第一件事是检查这个<code>Material</code>实例是否有法线贴图。如果没有，我们就像平常一样简单地使用顶点法线。如果它有法线贴图，我们使用储存着法线数据的法线纹理关联到当前纹理坐标。</p>
 <p>记住我们取得的颜色是法线坐标，但因为它们被储存为RGB值，所以它们的值在范围<script type="math/tex; mode=display">0, 1</script>中。我们需要将其范围转换为<script type="math/tex; mode=display">-1, 1</script>，所以我们将其乘以2然后减去1。然后，我们将它归一化，并将其转换到模型观察坐标系（就像顶点法线那样）。</p>
 <p>就这样，我们可以使用返回值作为片元所有光照计算中的法线。</p>

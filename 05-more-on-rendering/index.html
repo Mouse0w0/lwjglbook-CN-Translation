@@ -169,6 +169,11 @@
     <a class="" href="../23-3d-object-picking/">三维物体选取（3D Object Picking）</a>
 	    </li>
           
+            <li class="toctree-l1">
+		
+    <a class="" href="../24-hud-revisited/">回顾HUD - NanoVG（HUD Revisited - NanoVG）</a>
+	    </li>
+          
         </ul>
       </div>
       &nbsp;
@@ -406,10 +411,10 @@ memFree(indicesBuffer);
 </code></pre>
 
 <p>方法的参数如下：
-<em> mode: 指定渲染的图元类型，现在是三角形。没有什么变化。
-</em> count: 指定要渲染的顶点数。
-<em> type: 指定索引数据的类型。现在是无符号整数型。
-</em> indices: 指定要开始使用索引渲染的数据偏移量。</p>
+* mode: 指定渲染的图元类型，现在是三角形。没有什么变化。
+* count: 指定要渲染的顶点数。
+* type: 指定索引数据的类型。现在是无符号整数型。
+* indices: 指定要开始使用索引渲染的数据偏移量。</p>
 <p>现在可以使用新的和更有效的方法来绘制复杂的模型了，仅需指定索引。</p>
 <pre><code class="java">public void init() throws Exception {
     renderer.init();
