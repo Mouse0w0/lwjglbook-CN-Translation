@@ -174,6 +174,11 @@
     <a class="" href="../24-hud-revisited/">回顾HUD - NanoVG（HUD Revisited - NanoVG）</a>
 	    </li>
           
+            <li class="toctree-l1">
+		
+    <a class="" href="../25-optimizations-frustum-culling/">优化 - 截锥剔除 (Optimizations - Frustum Culling)</a>
+	    </li>
+          
         </ul>
       </div>
       &nbsp;
@@ -219,10 +224,10 @@
 <p>网格将组成一个巨大的四边形，它将会在X和Z轴上渲染，并根据像素颜色来改变它的Y轴高度。</p>
 <p><img alt="高度图坐标系" src="../_static/14/heightmap_coordinates.png" /> </p>
 <p>由高度图创建三维地形的过程可概括为以下步骤：
-* 加载储存高度图的图像(我们将使用一个<code>BufferedImage</code>实例以获取每个像素)。
-* 为每个图像像素创建一个顶点，其高度基于像素颜色。
-* 将正确的纹理坐标分配给顶点。
-* 设置索引以绘制与顶点相关的三角形。</p>
+<em> 加载储存高度图的图像(我们将使用一个<code>BufferedImage</code>实例以获取每个像素)。
+</em> 为每个图像像素创建一个顶点，其高度基于像素颜色。
+<em> 将正确的纹理坐标分配给顶点。
+</em> 设置索引以绘制与顶点相关的三角形。</p>
 <p>我们将创建一个名为<code>HeightMapMesh</code>的类，该类将基于高度图按以上步骤创建一个<code>Mesh</code>。让我们先看看该类定义的常量：</p>
 <pre><code class="java">private static final int MAX_COLOUR = 255 * 255 * 255;
 </code></pre>
@@ -235,8 +240,8 @@ private static final float STARTZ = -0.5f;
 </code></pre>
 
 <p>网格将由一组顶点（一个顶点对应一个像素）构成，其X和Z坐标的范围如下
-* X轴的范围为[-0.5, 0.5]，即[<code>STARTX</code>, <code>-STARTX</code>]。
-* Z轴的范围为[-0.5, 0.5]，即[<code>STARTZ</code>, <code>-STARTZ</code>]。</p>
+<em> X轴的范围为[-0.5, 0.5]，即[<code>STARTX</code>, <code>-STARTX</code>]。
+</em> Z轴的范围为[-0.5, 0.5]，即[<code>STARTZ</code>, <code>-STARTZ</code>]。</p>
 <p>不用太过担心这些值，稍后得到的网格可以被缩放以适应世界的大小。关于Y轴，我们将设置<code>minY</code>和<code>maxY</code>两个参数，用于设置Y坐标的最低和最高值。这些参数并不是常数，因为我们可能希望在运行时更改它们，而不使用缩放。最后，地形将包含在范围为<code>[STARTX, -STARTX]</code>，<code>[minY, maxY]</code>，<code>[STARTZ, -STARTZ]</code>的立方体内。</p>
 <p>网格将会在<code>HeightMapMesh</code>类的构造函数中创建，该类的定义如下。</p>
 <pre><code class="java">public HeightMapMesh(float minY, float maxY, String heightMapFile, String textureFile, int textInc) throws Exception {
@@ -415,8 +420,8 @@ mesh.setMaterial(material);
 </code></pre>
 
 <p>最后，为了创建更大的地形，我们有两个选择：
-* 创建更大的高度图
-* 重用高度图并将其平铺在三维空间中。高度图将像一个地形块，在世界上像瓷砖一样平移。为了做到这一点，高度图边缘的像素必须是相同的(左侧边缘必须与右侧相同，上侧边缘必须与下侧相同)，以避免块之间的间隙。</p>
+<em> 创建更大的高度图
+</em> 重用高度图并将其平铺在三维空间中。高度图将像一个地形块，在世界上像瓷砖一样平移。为了做到这一点，高度图边缘的像素必须是相同的(左侧边缘必须与右侧相同，上侧边缘必须与下侧相同)，以避免块之间的间隙。</p>
 <p>我们将使用第二种方法(并选择适当的高度图)。为了做到它，我们将创建一个名为<code>Terrain</code>的类，该类将创建一个正方形的高度图块，定义如下。</p>
 <pre><code class="java">package org.lwjglb.engine.items;
 
