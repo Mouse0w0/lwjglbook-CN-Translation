@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="Mouse0w0">
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Assimp库（Assimp） - Lwjglbook中文翻译</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Assimp\u5e93\uff08Assimp\uff09";
+    var mkdocs_page_input_path = "27-assimp.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Lwjglbook中文翻译</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../01-first-steps/">事前准备（First Steps）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../02-the-game-loop/">游戏循环（The Game Loop）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../03-a-brief-about-coordinates/">坐标简介（A brief about coordinates）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../04-rendering/">渲染（Rendering）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../05-more-on-rendering/">渲染补充（More on Rendering）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../06-transformations/">变换（Transformations）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../07-textures/">纹理（Textures）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../08-camera/">摄像机（Camera）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../09-loading-more-complex-models/">加载更复杂的模型（Loading more complex models）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../10-let-there-be-light/">要有光（Let there be light）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../11-let-there-be-even-more-light/">要有更多的光（Let there be even more light）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../12-game-hud/">游戏HUD（Game HUD）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../13-sky-box-and-some-optimizations/">天空盒与一些优化 (Sky Box and some optimizations)</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../14-height-maps/">高度图（Height Maps）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../15-terrain-collisions/">地形碰撞 (Terrain Collisions)</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../16-fog/">雾 (Fog)</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../17-normal-mapping/">法线贴图（Normal Mapping）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../18-shadows/">阴影（Shadows）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../19-animations/">动画（Animations）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../20-particles/">粒子（Particles）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../21-instanced-rendering/">实例化渲染（Instanced Rendering）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../22-audio/">音效（Audio）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../23-3d-object-picking/">三维物体选取（3D Object Picking）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../24-hud-revisited/">回顾HUD - NanoVG（HUD Revisited - NanoVG）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../25-optimizations-frustum-culling/">优化 - 截锥剔除（Optimizations - Frustum Culling）</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../26-cascaded-shadow-maps/">级联阴影映射（Cascaded Shadow Maps）</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Lwjglbook中文翻译</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Assimp库（Assimp）</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/Mouse0w0/lwjglbook-CN-Translation/edit/master/docs/27-assimp.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="assimpassimp">Assimp库（Assimp）</h1>
+<h2 id="_1">静态网格</h2>
+<p>The capability of loading complex 3D models in different formats is crucial in order to write a game. The task of writing parsers for some of them would require lots of work. Even just supporting a single format can be time consuming. For instance, the wavefront loader described in chapter 9, only parses a small subset of the specification <script type="math/tex">materials are not handled at all</script>.</p>
+<p>Fortunately, the <a href="http://assimp.sourceforge.net/">Assimp </a> library already can be used to parse many common 3D formats. It’s a C++ library which can load static and animated models in a variety of formats. LWJGL provides the bindings to use them from Java code. In this chapter, we will explain how it can be used.</p>
+<p>The first thing is adding assimp maven dependencies to the project pom.xml. We need to add compile time and runtime dependencies.</p>
+<pre><code class="xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.lwjgl&lt;/groupId&gt;
+    &lt;artifactId&gt;lwjgl-assimp&lt;/artifactId&gt;
+    &lt;version&gt;${lwjgl.version}&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.lwjgl&lt;/groupId&gt;
+    &lt;artifactId&gt;lwjgl-assimp&lt;/artifactId&gt;
+    &lt;version&gt;${lwjgl.version}&lt;/version&gt;
+    &lt;classifier&gt;${native.target}&lt;/classifier&gt;
+    &lt;scope&gt;runtime&lt;/scope&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<p>Once the dependencies has been set, we will create a new class named StaticMeshesLoader that will be used to load meshes with no animations. The class defines two static public methods:</p>
+<pre><code class="java">public static Mesh[] load(String resourcePath, String texturesDir) throws Exception {
+    return load(resourcePath, texturesDir, aiProcess_JoinIdenticalVertices | aiProcess_Triangulate | aiProcess_FixInfacingNormals);
+}
+
+public static Mesh[] load(String resourcePath, String texturesDir, int flags) throws Exception {
+    // ....
+</code></pre>
+
+<p>Both methods have the following arguments:</p>
+<ul>
+<li>
+<p><code>resourcePath</code>: The path to the file where the model file is located. This is an absolute path, because Assimp may need to load additional files and may use the same base path as the resource path <script type="math/tex">For instance, material files for wavefront, OBJ, files</script>. If you embed your resources inside a JAR file, Assimp will not be able to import it, so it must be a file system path.</p>
+</li>
+<li>
+<p><code>texturesDir</code>: The path to the directory that will hold the textures for this model. This a CLASSPATH relative path. For instance, a wavefront material file may define several texture files. The code, expect this files to be located in the <code>texturesDir</code> directory. If you find texture loading errors you may need to manually tweak these paths in the model file.</p>
+</li>
+</ul>
+<p>The second method has an extra argument named <code>flags</code>. This parameter allows to tune the loading process. The first method invokes the second one and passes some values that are useful in most of the situations:</p>
+<ul>
+<li>
+<p><code>aiProcess_JoinIdenticalVertices</code>: This flag reduces the number of vertices that are used, identifying those that can be reused between faces.</p>
+</li>
+<li>
+<p><code>aiProcess_Triangulate</code>: The model may use quads or other geometries to define their elements. Since we are only dealing with triangles, we must use this flag to split all he faces into triangles <script type="math/tex">if needed</script>.</p>
+</li>
+<li>
+<p><code>aiProcess_FixInfacingNormals</code>: This flags try to reverse normals that may point inwards.</p>
+</li>
+</ul>
+<p>There are many other flags that can be used, you can check them in the LWJGL Javadoc documentation.</p>
+<p>Let’s go back to the second constructor. The first thing we do is invoke the <code>aiImportFile</code> method to load the model with the selected flags.</p>
+<pre><code class="java">AIScene aiScene = aiImportFile(resourcePath, flags);
+if (aiScene == null) {
+    throw new Exception(&quot;Error loading model&quot;);
+}
+</code></pre>
+
+<p>The rest of the code for the constructor is a as follows:</p>
+<pre><code class="java">int numMaterials = aiScene.mNumMaterials();
+PointerBuffer aiMaterials = aiScene.mMaterials();
+List&lt;Material&gt; materials = new ArrayList&lt;&gt;();
+for (int i = 0; i &lt; numMaterials; i++) {
+    AIMaterial aiMaterial = AIMaterial.create(aiMaterials.get(i));
+    processMaterial(aiMaterial, materials, texturesDir);
+}
+
+int numMeshes = aiScene.mNumMeshes();
+PointerBuffer aiMeshes = aiScene.mMeshes();
+Mesh[] meshes = new Mesh[numMeshes];
+for (int i = 0; i &lt; numMeshes; i++) {
+    AIMesh aiMesh = AIMesh.create(aiMeshes.get(i));
+    Mesh mesh = processMesh(aiMesh, materials);
+    meshes[i] = mesh;
+}
+
+return meshes;
+</code></pre>
+
+<p>We process the materials contained in the model. Materials define colour and textures to be used by the meshes that compose the model. Then we process the different meshes. A model can define several meshes and each of them can use one of the materials defined for the model.</p>
+<p>If you examine the code above you may see that many of the calls to the Assimp library return <code>PointerBuffer</code> instances. You can think about them like C pointers, they just point to a memory region which contain data. You need to know in advance the type of data that they hold in order to process them. In the case of materials, we iterate over that buffer creating instances of the <code>AIMaterial</code> class. In the second case, we iterate over the buffer that holds mesh data creating instance of the <code>AIMesh</code> class.</p>
+<p>Let’s examine the <code>processMaterial</code> method.</p>
+<pre><code class="java">private static void processMaterial(AIMaterial aiMaterial, List&lt;Material&gt; materials, String texturesDir) throws Exception {
+    AIColor4D colour = AIColor4D.create();
+
+    AIString path = AIString.calloc();
+    Assimp.aiGetMaterialTexture(aiMaterial, aiTextureType_DIFFUSE, 0, path, (IntBuffer) null, null, null, null, null, null);
+    String textPath = path.dataString();
+    Texture texture = null;
+    if (textPath != null &amp;&amp; textPath.length() &gt; 0) {
+        TextureCache textCache = TextureCache.getInstance();
+        texture = textCache.getTexture(texturesDir + &quot;/&quot; + textPath);
+    }
+
+    Vector4f ambient = Material.DEFAULT_COLOUR;
+    int result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_AMBIENT, aiTextureType_NONE, 0, colour);
+    if (result == 0) {
+        ambient = new Vector4f(colour.r(), colour.g(), colour.b(), colour.a());
+    }
+
+    Vector4f diffuse = Material.DEFAULT_COLOUR;
+    result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_DIFFUSE, aiTextureType_NONE, 0, colour);
+    if (result == 0) {
+        diffuse = new Vector4f(colour.r(), colour.g(), colour.b(), colour.a());
+    }
+
+    Vector4f specular = Material.DEFAULT_COLOUR;
+    result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_SPECULAR, aiTextureType_NONE, 0, colour);
+    if (result == 0) {
+        specular = new Vector4f(colour.r(), colour.g(), colour.b(), colour.a());
+    }
+
+    Material material = new Material(ambient, diffuse, specular, 1.0f);
+    material.setTexture(texture);
+    materials.add(material);
+}
+</code></pre>
+
+<p>We check if the material defines a texture or not. If so, we load the texture. We have created a new class named <code>TextureCache</code> which caches textures. This is due to the fact that several meshes may share the same texture and we do not want to waste space loading again and again the same data. Then we try to get the colours of the material for the ambient, diffuse and specular components. Fortunately, the definition that we had for a material already contained that information.</p>
+<p>The <code>TextureCache</code> definition is very simple is just a map that indexes the different textures by the path to the texture file <script type="math/tex">You can check directly in the source code</script>. Due to the fact, that now textures may use different image formats <script type="math/tex">PNG, JPEG, etc.</script>, we have modified the way that textures are loaded. Instead of using the PNG library, we now use the STB library to be able to load more formats.</p>
+<p>Let’s go back to the <code>StaticMeshesLoader</code> class. The <code>processMesh</code> is defined like this.</p>
+<pre><code class="java">private static Mesh processMesh(AIMesh aiMesh, List&lt;Material&gt; materials) {
+    List&lt;Float&gt; vertices = new ArrayList&lt;&gt;();
+    List&lt;Float&gt; textures = new ArrayList&lt;&gt;();
+    List&lt;Float&gt; normals = new ArrayList&lt;&gt;();
+    List&lt;Integer&gt; indices = new ArrayList();
+
+    processVertices(aiMesh, vertices);
+    processNormals(aiMesh, normals);
+    processTextCoords(aiMesh, textures);
+    processIndices(aiMesh, indices);
+
+    Mesh mesh = new Mesh(Utils.listToArray(vertices),
+        Utils.listToArray(textures),
+        Utils.listToArray(normals),
+        Utils.listIntToArray(indices)
+    );
+    Material material;
+    int materialIdx = aiMesh.mMaterialIndex();
+    if (materialIdx &gt;= 0 &amp;&amp; materialIdx &lt; materials.size()) {
+        material = materials.get(materialIdx);
+    } else {
+        material = new Material();
+    }
+    mesh.setMaterial(material);
+
+    return mesh;
+}
+</code></pre>
+
+<p>A <code>Mesh</code> is defined by a set of vertices position, normals directions, texture coordinates and indices. Each of these elements are processed in the <code>processVertices</code>, <code>processNormals</code>, <code>processTextCoords</code> and <code>processIndices</code> methods. A Mesh also may point to a material, using its index. If the index corresponds to the previously processed materials we just simply associate them to the <code>Mesh</code>.</p>
+<p>The <code>processXXX</code> methods are very simple, they just invoke the corresponding method over the <code>AIMesh</code> instance that returns the desired data. For instance, the process processVertices is defined like this:</p>
+<pre><code class="java">private static void processVertices(AIMesh aiMesh, List&lt;Float&gt; vertices) {
+    AIVector3D.Buffer aiVertices = aiMesh.mVertices();
+    while (aiVertices.remaining() &gt; 0) {
+        AIVector3D aiVertex = aiVertices.get();
+        vertices.add(aiVertex.x());
+        vertices.add(aiVertex.y());
+        vertices.add(aiVertex.z());
+    }
+}
+</code></pre>
+
+<p>You can see that get get a buffer to the vertices by invoking the <code>mVertices</code> method. We just simply process them to create a <code>List</code> of floats that contain the vertices positions. Since, the method returns just a buffer you could pass that information directly to the OpenGL methods that create vertices. We do not do it that way for two reasons. The first one is try to reduce as much as possible the modifications over the code base. Second one is that by loading into an intermediate structure you may be able to perform some pros-processing tasks and even debug the loading process.</p>
+<p>If you want a sample of the much more efficient approach, that is, directly passing the buffers to OpenGL, you can check this <a href="https://github.com/LWJGL/lwjgl3-demos/blob/master/src/org/lwjgl/demo/opengl/assimp/WavefrontObjDemo.java">sample</a>.</p>
+<p>The <code>StaticMeshesLoader</code> makes the <code>OBJLoader</code> class obsolete, so it has been removed from the base source code. A more complex OBJ file is provided as a sample, if you run it you will see something like this:</p>
+<p><img alt="" src="/chapter27/model.png" /></p>
+<h2 id="animations">Animations</h2>
+<p>Now that we have used assimp for loading static meshes we can proceed with animations. If you recall from the animations chapter, the VAO associated to a mesh contains the vertices positions, the texture coordinates, the indices and a list of weights that should be applied to joint positions to modulate final vertex position.</p>
+<h4 id="_2"><img alt="" src="/chapter27/vao_animation.png" /></h4>
+<p>Each vertex position has associated a list of four weights that change the final position, referring the bones indices that will be combined to determine its final position. Each frame, a list of transformation matrices are loaded, as uniforms, for each joint. With that information the final position is calculated.</p>
+<p>In the animation chapter, we developed a MD5 parser to load animated meshes. In this chapter we will use assimp library. This will allow us to load many more formats besides MD5, such as <a href="https://en.wikipedia.org/wiki/COLLADA" title="COLLADA">COLLADA</a>, <a href="https://en.wikipedia.org/wiki/FBX" title="FBX">FBX</a>, etc.</p>
+<p>Before we start coding let’s clarify some terminology. In this chapter we will refer to bones and joints indistinguishably. A joint / bone is are just elements that affect vertices, and that have a parent forming a hierarchy. MD5 format uses the term joint, but assimp uses the term bone.</p>
+<p>Let’s review first the structures handled by assimp that contain animation information. We will start first with the bones and weights information. For each Mesh, we can access the vertices positions, texture coordinates and indices. Meshes store also a list of bones. Each bone is defined by the following attributes:</p>
+<ul>
+<li>A name.</li>
+<li>An offset matrix: This will used later to compute the final transformations that should be used by each bone.</li>
+</ul>
+<p>Bones also point to a list of weights, each weights. Each weights is defined by the following attributes:</p>
+<ul>
+<li>A weight factor, that is, the number that will be used to modulate the influence of the bone’s transformation associated to each vertex.</li>
+<li>A vertex identifier, that is, the vertex associated to the current bone.</li>
+</ul>
+<p>The following picture shows the relationships between all these elements.</p>
+<h4 id="_3"><img alt="" src="/chapter27/mesh_bones_weights_vertices.png" /></h4>
+<p>Hence, the first thing that we must do is to construct the list of vertices positions, the bones / joints / indices and the associated weights from the structure above. Once we have done that, we need to pre-calculate the transformation matrices for each bone / joint for all the animation frames defined in the model.</p>
+<p>Assimp scene object defines a Node’s hierarchy. Each Node is defined by a name a list of children node. Animations use these nodes to define the transformations that should be applied to. This hierarchy is defined indeed the bones’ hierarchy. Every bone is a node, and has a parent, except the root node, and possible a set of children. There are special nodes that are not bones, they are used to group transformations, and should be handled when calculating the transformations. Another issue is that these Node’s hierarchy is defined from the whole model, we do not have separate hierarchies for each mesh.</p>
+<p>A scene also defines a set of animations. A single model can have more than one animation. You can have animations for a model to walk, run etc. Each of these animations define different transformations. An animation has the following attributes:</p>
+<ul>
+<li>A name.</li>
+<li>A duration. That is, the duration in time of the animation. The name may seem confusing since an animation is the list of transformations that should be applied to each node for each different frame. </li>
+<li>A list of animation channels. An animation channel contains, for a specific instant in time the translation, rotation and scaling information that should be applied to each node. The class that models the data contained in the animation channels is the AINodeAnim.</li>
+</ul>
+<p>The following figure shows the relationships between all the elements described above.</p>
+<h4 id="_4"><img alt="" src="/chapter27/node_animations.png" /></h4>
+<p>For a specific instant of time, for a frame, the transformation to be applied to a bone is the transformation defined in the animation channel for that instant, multiplied by the transformations of all the parent nodes up to the root node. Hence, we need to reorder the information stored in the scene, the process is as follows:</p>
+<ul>
+<li>Construct the node hierarchy.</li>
+<li>For each animation, iterate over each animation channel <script type="math/tex">for each animation node</script>:
+   Construct the transformation matrices for all the frames. The transformation m matrix is the composition of the translation, rotation and scale matrix .</li>
+<li>Reorder that information for each frame:
+   Construct the final transformations to be applied for each bone in the Mesh. This is achieved by multiplying the transformation matrix of the bone <script type="math/tex">of the associated node</script> by the transformation matrices of all the parent nodes up to the root node.</li>
+</ul>
+<p>So let’s start coding. We will first create a class named <code>AnimMeshesLoader</code> which extends from <code>StaticMeshesLoader</code>, but instead of returning an array of Meshes, it returns an <code>AnimGameItem</code> instance. It defines two public methods for that:</p>
+<pre><code class="java">public static AnimGameItem loadAnimGameItem(String resourcePath, String texturesDir)
+        throws Exception {
+    return loadAnimGameItem(resourcePath, texturesDir,
+            aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices | aiProcess_Triangulate
+            | aiProcess_FixInfacingNormals | aiProcess_LimitBoneWeights);
+}
+
+public static AnimGameItem loadAnimGameItem(String resourcePath, String texturesDir, int flags)
+        throws Exception {
+    AIScene aiScene = aiImportFile(resourcePath, flags);
+    if (aiScene == null) {
+        throw new Exception(&quot;Error loading model&quot;);
+    }
+
+    int numMaterials = aiScene.mNumMaterials();
+    PointerBuffer aiMaterials = aiScene.mMaterials();
+    List&lt;Material&gt; materials = new ArrayList&lt;&gt;();
+    for (int i = 0; i &lt; numMaterials; i++) {
+        AIMaterial aiMaterial = AIMaterial.create(aiMaterials.get(i));
+        processMaterial(aiMaterial, materials, texturesDir);
+    }
+
+    List&lt;Bone&gt; boneList = new ArrayList&lt;&gt;();
+    int numMeshes = aiScene.mNumMeshes();
+    PointerBuffer aiMeshes = aiScene.mMeshes();
+    Mesh[] meshes = new Mesh[numMeshes];
+    for (int i = 0; i &lt; numMeshes; i++) {
+        AIMesh aiMesh = AIMesh.create(aiMeshes.get(i));
+        Mesh mesh = processMesh(aiMesh, materials, boneList);
+        meshes[i] = mesh;
+    }
+
+    AINode aiRootNode = aiScene.mRootNode();
+    Matrix4f rootTransfromation = AnimMeshesLoader.toMatrix(aiRootNode.mTransformation());
+    Node rootNode = processNodesHierarchy(aiRootNode, null);
+    Map&lt;String, Animation&gt; animations = processAnimations(aiScene, boneList, rootNode, rootTransfromation);
+    AnimGameItem item = new AnimGameItem(meshes, animations);
+
+    return item;
+}
+</code></pre>
+
+<p>The methods are quite similar to the ones defined in the <code>StaticMeshesLoader</code> with the following differences:</p>
+<ul>
+<li>The method that passes a default set of loading flags, uses this new parameter: <code>aiProcess_LimitBoneWeights</code>. This will limit the maximum number of weights that affect a vertex to four <script type="math/tex">This is also the maximum value that we are currently supporting from the animations chapter</script>.</li>
+<li>The method that actually loads the model just loads the different meshes but it first calculates the node hierarchy and then calls to the <code>processAnimations</code> at the end to build an <code>AnimGameItem</code> instance.</li>
+</ul>
+<p>The <code>processMesh</code> method is quite similar to the one in the <code>StaticMeshesLoader</code> with the exception that it creates Meshes passing joint indices and weights as a parameter:</p>
+<pre><code class="java">processBones(aiMesh, boneList, boneIds, weights);
+
+Mesh mesh = new Mesh(Utils.listToArray(vertices), Utils.listToArray(textures),
+    Utils.listToArray(normals), Utils.listIntToArray(indices),
+    Utils.listIntToArray(boneIds), Utils.listToArray(weights));
+</code></pre>
+
+<p>The joint indices and weights are calculated in the <code>processBones</code> method:</p>
+<pre><code class="java">private static void processBones(AIMesh aiMesh, List&lt;Bone&gt; boneList, List&lt;Integer&gt; boneIds,
+        List&lt;Float&gt; weights) {
+    Map&lt;Integer, List&lt;VertexWeight&gt;&gt; weightSet = new HashMap&lt;&gt;();
+    int numBones = aiMesh.mNumBones();
+    PointerBuffer aiBones = aiMesh.mBones();
+    for (int i = 0; i &lt; numBones; i++) {
+        AIBone aiBone = AIBone.create(aiBones.get(i));
+        int id = boneList.size();
+        Bone bone = new Bone(id, aiBone.mName().dataString(), toMatrix(aiBone.mOffsetMatrix()));
+        boneList.add(bone);
+        int numWeights = aiBone.mNumWeights();
+        AIVertexWeight.Buffer aiWeights = aiBone.mWeights();
+        for (int j = 0; j &lt; numWeights; j++) {
+            AIVertexWeight aiWeight = aiWeights.get(j);
+            VertexWeight vw = new VertexWeight(bone.getBoneId(), aiWeight.mVertexId(),
+                    aiWeight.mWeight());
+            List&lt;VertexWeight&gt; vertexWeightList = weightSet.get(vw.getVertexId());
+            if (vertexWeightList == null) {
+                vertexWeightList = new ArrayList&lt;&gt;();
+                weightSet.put(vw.getVertexId(), vertexWeightList);
+            }
+            vertexWeightList.add(vw);
+        }
+    }
+
+    int numVertices = aiMesh.mNumVertices();
+    for (int i = 0; i &lt; numVertices; i++) {
+        List&lt;VertexWeight&gt; vertexWeightList = weightSet.get(i);
+        int size = vertexWeightList != null ? vertexWeightList.size() : 0;
+        for (int j = 0; j &lt; Mesh.MAX_WEIGHTS; j++) {
+            if (j &lt; size) {
+                VertexWeight vw = vertexWeightList.get(j);
+                weights.add(vw.getWeight());
+                boneIds.add(vw.getBoneId());
+            } else {
+                weights.add(0.0f);
+                boneIds.add(0);
+            }
+        }
+    }
+}
+</code></pre>
+
+<p>This method traverses the bone definition for a specific mesh, getting their weights and generating filling up three lists:</p>
+<ul>
+<li><code>boneList</code>: It contains a list of nodes, with their offset matrices. It will uses later on to calculate nodes transformations. A new class named <code>Bone</code> has been created to hold that information. This list will contain the bones for all the meshes.</li>
+<li><code>boneIds</code>: It contains just the identifiers of the bones for each vertex of the <code>Mesh</code>. Bones are identified by its position when rendering. This list only contains the bones for a specific Mesh.</li>
+<li><code>weights</code>: It contains the weights for each vertex of the <code>Mesh</code> to be applied for the associated bones.</li>
+</ul>
+<p>The information contained in the <code>weights</code> and <code>boneIds</code> is used to construct the <code>Mesh</code> data. The information contained in the boneList will be used later when calculating animation data.</p>
+<p>Let’s go back to the <code>loadAnimGameItem</code> method. Once we have created the Meshes, we also get the transformation which is applied to the root node which will be used also to calculate the final transformation. After that , we need to process the hierarchy of nodes, which is done in the <code>processNodesHierarchy</code> method. This method is quite simple, It just traverses the nodes hierarchy starting from the root node constructing a tree of nodes.</p>
+<pre><code class="java">private static Node processNodesHierarchy(AINode aiNode, Node parentNode) {
+    String nodeName = aiNode.mName().dataString();
+    Node node = new Node(nodeName, parentNode);
+
+    int numChildren = aiNode.mNumChildren();
+    PointerBuffer aiChildren = aiNode.mChildren();
+    for (int i = 0; i &lt; numChildren; i++) {
+        AINode aiChildNode = AINode.create(aiChildren.get(i));
+        Node childNode = processNodesHierarchy(aiChildNode, node);
+        node.addChild(childNode);
+    }
+
+    return node;
+}
+</code></pre>
+
+<p>We have created a new <code>Node</code> class that will contain the relevant information of <code>AINode</code> instances, and provides find methods to locate the nodes hierarchy to find a node by its name. Back in the <code>loadAnimGameItem</code> method, we just use that information to calculate the animations in the <code>processAnimations</code> method. This method returns a <code>Map</code> of <code>Animation</code> instances. Remember that a model can have more than one animation, so they are stored indexed by their names. With that information we can finally construct an <code>AnimAgameItem</code> instance.</p>
+<p>The <code>processAnimations</code> method is defined like this</p>
+<pre><code class="java">private static Map&lt;String, Animation&gt; processAnimations(AIScene aiScene, List&lt;Bone&gt; boneList,
+        Node rootNode, Matrix4f rootTransformation) {
+    Map&lt;String, Animation&gt; animations = new HashMap&lt;&gt;();
+
+    // Process all animations
+    int numAnimations = aiScene.mNumAnimations();
+    PointerBuffer aiAnimations = aiScene.mAnimations();
+    for (int i = 0; i &lt; numAnimations; i++) {
+        AIAnimation aiAnimation = AIAnimation.create(aiAnimations.get(i));
+
+        // Calculate transformation matrices for each node
+        int numChanels = aiAnimation.mNumChannels();
+        PointerBuffer aiChannels = aiAnimation.mChannels();
+        for (int j = 0; j &lt; numChanels; j++) {
+            AINodeAnim aiNodeAnim = AINodeAnim.create(aiChannels.get(j));
+            String nodeName = aiNodeAnim.mNodeName().dataString();
+            Node node = rootNode.findByName(nodeName);
+            buildTransFormationMatrices(aiNodeAnim, node);
+        }
+
+        List&lt;AnimatedFrame&gt; frames = buildAnimationFrames(boneList, rootNode, rootTransformation);
+        Animation animation = new Animation(aiAnimation.mName().dataString(), frames, aiAnimation.mDuration());
+        animations.put(animation.getName(), animation);
+    }
+    return animations;
+}
+</code></pre>
+
+<p>For each animation, animation channels are processed. Each channel defines the different transformations that should be applied over time for a node. The transformations defined for each node are defined in the <code>buildTransFormationMatricesmethod</code>. These matrices are stored for each node. Once the nodes hierarchy is filled up with that information we can construct the animation frames.</p>
+<p>Let’s first review the <code>buildTransFormationMatrices</code> method:</p>
+<pre><code class="java">private static void buildTransFormationMatrices(AINodeAnim aiNodeAnim, Node node) {
+    int numFrames = aiNodeAnim.mNumPositionKeys();
+    AIVectorKey.Buffer positionKeys = aiNodeAnim.mPositionKeys();
+    AIVectorKey.Buffer scalingKeys = aiNodeAnim.mScalingKeys();
+    AIQuatKey.Buffer rotationKeys = aiNodeAnim.mRotationKeys();
+
+    for (int i = 0; i &lt; numFrames; i++) {
+        AIVectorKey aiVecKey = positionKeys.get(i);
+        AIVector3D vec = aiVecKey.mValue();
+
+        Matrix4f transfMat = new Matrix4f().translate(vec.x(), vec.y(), vec.z());
+
+        AIQuatKey quatKey = rotationKeys.get(i);
+        AIQuaternion aiQuat = quatKey.mValue();
+        Quaternionf quat = new Quaternionf(aiQuat.x(), aiQuat.y(), aiQuat.z(), aiQuat.w());
+        transfMat.rotate(quat);
+
+        if (i &lt; aiNodeAnim.mNumScalingKeys()) {
+            aiVecKey = scalingKeys.get(i);
+            vec = aiVecKey.mValue();
+            transfMat.scale(vec.x(), vec.y(), vec.z());
+        }
+
+        node.addTransformation(transfMat);
+    }
+}
+</code></pre>
+
+<p>As you can see, an <code>AINodeAnim</code> instance defines a set of keys that contain translation, rotation and scaling information. These keys are referred to specific instant of times. We assume that information is ordered in time, and construct a list of matrices that contain the transformation to be applied for each frame. That final calculation is done in the <code>buildAnimationFrames</code> method:</p>
+<pre><code class="java">private static List&lt;AnimatedFrame&gt; buildAnimationFrames(List&lt;Bone&gt; boneList, Node rootNode,
+        Matrix4f rootTransformation) {
+
+    int numFrames = rootNode.getAnimationFrames();
+    List&lt;AnimatedFrame&gt; frameList = new ArrayList&lt;&gt;();
+    for (int i = 0; i &lt; numFrames; i++) {
+        AnimatedFrame frame = new AnimatedFrame();
+        frameList.add(frame);
+
+        int numBones = boneList.size();
+        for (int j = 0; j &lt; numBones; j++) {
+            Bone bone = boneList.get(j);
+            Node node = rootNode.findByName(bone.getBoneName());
+            Matrix4f boneMatrix = Node.getParentTransforms(node, i);
+            boneMatrix.mul(bone.getOffsetMatrix());
+            boneMatrix = new Matrix4f(rootTransformation).mul(boneMatrix);
+            frame.setMatrix(j, boneMatrix);
+        }
+    }
+
+    return frameList;
+}
+</code></pre>
+
+<p>This method returns a list of <code>AnimatedFrame</code> instances. Each <code>AnimatedFrame</code> instance will contain the list of transformations to be applied for each bone for a specific frame. This method just iterates over the list that contains all the bones. For each bone:</p>
+<ul>
+<li>Gets the associated node.</li>
+<li>Builds a transformation matrix by multiplying the transformation of the associated <code>Node</code> with all the transformations of their parents up to the root node. This is done in the <code>Node.getParentTransforms</code> method.</li>
+<li>It multiplies that matrix with the bone’s offset matrix.</li>
+<li>The final transformation is calculated by multiplying the root’s node transformation with the matrix calculated in the step above.</li>
+</ul>
+<p>The rest of the changes in the source code are minor changes to adapt some structures. At the end you will be able to load animations like this one <script type="math/tex">you need yo press space par to change the frame</script>.</p>
+<p><img alt="" src="/chapter27/animation_result.png" /></p>
+<p>The complexity of this sample resides more in the adaptations of the assimp structures to adapt it to the engine used in the book and to pre-calculate the data for each frame. Beyond that, the concepts are similar to the ones presented in the animations chapter. You may try also to modify the source code to interpolate between frames to get smoother animations.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>2019, Mouse0w0</p>
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/Mouse0w0/lwjglbook-CN-Translation/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" defer></script>
+      <script src="../search/main.js" defer></script>
+
+</body>
+</html>
