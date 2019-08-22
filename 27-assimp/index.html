@@ -178,6 +178,25 @@
     <a class="" href="../26-cascaded-shadow-maps/">级联阴影映射（Cascaded Shadow Maps）</a>
 	    </li>
           
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">Assimp库（Assimp）</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#assimpassimp">Assimp库（Assimp）</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#_1">静态网格</a></li>
+        
+            <li><a class="toctree-l3" href="#_2">动画</a></li>
+        
+        </ul>
+    
+
+    </ul>
+	    </li>
+          
         </ul>
       </div>
       &nbsp;
@@ -215,9 +234,9 @@
               
                 <h1 id="assimpassimp">Assimp库（Assimp）</h1>
 <h2 id="_1">静态网格</h2>
-<p>The capability of loading complex 3D models in different formats is crucial in order to write a game. The task of writing parsers for some of them would require lots of work. Even just supporting a single format can be time consuming. For instance, the wavefront loader described in chapter 9, only parses a small subset of the specification <script type="math/tex">materials are not handled at all</script>.</p>
-<p>Fortunately, the <a href="http://assimp.sourceforge.net/">Assimp </a> library already can be used to parse many common 3D formats. It’s a C++ library which can load static and animated models in a variety of formats. LWJGL provides the bindings to use them from Java code. In this chapter, we will explain how it can be used.</p>
-<p>The first thing is adding assimp maven dependencies to the project pom.xml. We need to add compile time and runtime dependencies.</p>
+<p>加载不同格式的复杂三维模型的功能对于编写游戏至关重要，为其中一些编写解析器需要大量的工作，即便只支持一种格式也可能很耗时。例如，在第九章中描述的wavefront加载器只解析了规范中的一小部分（根本不处理材质）。</p>
+<p>幸运的是，已经可以使用<a href="http://assimp.sourceforge.net/">Assimp</a>库来解析许多常见的3D格式。它是一个C++库，可以以各种格式加载静态和动画模型。LWJGL提供了绑定以便从Java代码中使用它们。在本章中，我们将学习如何使用它。</p>
+<p>首先是将Assimp的Maven依赖项添加到<code>pom.xml</code>文件中。我们需要添加编译时和运行时依赖项。</p>
 <pre><code class="xml">&lt;dependency&gt;
     &lt;groupId&gt;org.lwjgl&lt;/groupId&gt;
     &lt;artifactId&gt;lwjgl-assimp&lt;/artifactId&gt;
@@ -232,7 +251,7 @@
 &lt;/dependency&gt;
 </code></pre>
 
-<p>Once the dependencies has been set, we will create a new class named StaticMeshesLoader that will be used to load meshes with no animations. The class defines two static public methods:</p>
+<p>一旦设置了依赖项，我们将创建一个名为<code>StaticMeshesLoader</code>的新类，该类将用于加载不带动画的网格，该类定义了两个静态公共方法：</p>
 <pre><code class="java">public static Mesh[] load(String resourcePath, String texturesDir) throws Exception {
     return load(resourcePath, texturesDir, aiProcess_JoinIdenticalVertices | aiProcess_Triangulate | aiProcess_FixInfacingNormals);
 }
@@ -241,36 +260,22 @@ public static Mesh[] load(String resourcePath, String texturesDir, int flags) th
     // ....
 </code></pre>
 
-<p>Both methods have the following arguments:</p>
-<ul>
-<li>
-<p><code>resourcePath</code>: The path to the file where the model file is located. This is an absolute path, because Assimp may need to load additional files and may use the same base path as the resource path <script type="math/tex">For instance, material files for wavefront, OBJ, files</script>. If you embed your resources inside a JAR file, Assimp will not be able to import it, so it must be a file system path.</p>
-</li>
-<li>
-<p><code>texturesDir</code>: The path to the directory that will hold the textures for this model. This a CLASSPATH relative path. For instance, a wavefront material file may define several texture files. The code, expect this files to be located in the <code>texturesDir</code> directory. If you find texture loading errors you may need to manually tweak these paths in the model file.</p>
-</li>
-</ul>
-<p>The second method has an extra argument named <code>flags</code>. This parameter allows to tune the loading process. The first method invokes the second one and passes some values that are useful in most of the situations:</p>
-<ul>
-<li>
-<p><code>aiProcess_JoinIdenticalVertices</code>: This flag reduces the number of vertices that are used, identifying those that can be reused between faces.</p>
-</li>
-<li>
-<p><code>aiProcess_Triangulate</code>: The model may use quads or other geometries to define their elements. Since we are only dealing with triangles, we must use this flag to split all he faces into triangles <script type="math/tex">if needed</script>.</p>
-</li>
-<li>
-<p><code>aiProcess_FixInfacingNormals</code>: This flags try to reverse normals that may point inwards.</p>
-</li>
-</ul>
-<p>There are many other flags that can be used, you can check them in the LWJGL Javadoc documentation.</p>
-<p>Let’s go back to the second constructor. The first thing we do is invoke the <code>aiImportFile</code> method to load the model with the selected flags.</p>
+<p>两种方法都有以下参数：
+<em> <code>resourcePath</code>：模型文件所在的文件路径。这是一个绝对路径，因为Assimp可能需要加载其他文件（例如wavefront、OBJ等文件的材质文件），并且可能使用与资源路径相同的基路径。如果将资源嵌入JAR文件中，那么assimp将无法导入它，因此它必须是文件系统路径。
+</em> <code>texturesDir</code>：保存此模型的文件夹路径。这是CLASSPATH的相对路径。例如，wavefront材质文件可以定义多个纹理文件。代码希望此文件位于<code>texturesDir</code>目录下。如果发现纹理加载错误，可能需要在模型文件中手动调整这些路径。</p>
+<p>第二个方法有一个名为<code>flags</code>的额外参数。此参数允许调整加载过程。第一个方法调用第二个方法，并传递一些在大多数情况下都有用的值：
+<em> <code>aiProcess_JoinIdenticalVertices</code>：此标记将减少使用的顶点数，识别可在面之间重用的顶点。
+</em> <code>aiProcess_Triangulate</code>：模型可以使用四边形或其他几何图形来定义它们的元素。由于我们只处理三角形，因此必须使用此标记将所有的面拆分为三角形（如果有必要的话）。
+* <code>aiProcess_FixInfacingNormals</code>：此标记将尝试反转可能指向内部的法线。</p>
+<p>还有许多其他标记可以使用，你可以在LWJGL的Javadoc文档中查阅它们。</p>
+<p>回看到第二个载入方法，我们要做的第一件事是调用<code>aiImportFile</code>方法来加载带有所选标记的模型。</p>
 <pre><code class="java">AIScene aiScene = aiImportFile(resourcePath, flags);
 if (aiScene == null) {
     throw new Exception(&quot;Error loading model&quot;);
 }
 </code></pre>
 
-<p>The rest of the code for the constructor is a as follows:</p>
+<p>载入方法的其余代码如下所示：</p>
 <pre><code class="java">int numMaterials = aiScene.mNumMaterials();
 PointerBuffer aiMaterials = aiScene.mMaterials();
 List&lt;Material&gt; materials = new ArrayList&lt;&gt;();
@@ -291,9 +296,9 @@ for (int i = 0; i &lt; numMeshes; i++) {
 return meshes;
 </code></pre>
 
-<p>We process the materials contained in the model. Materials define colour and textures to be used by the meshes that compose the model. Then we process the different meshes. A model can define several meshes and each of them can use one of the materials defined for the model.</p>
-<p>If you examine the code above you may see that many of the calls to the Assimp library return <code>PointerBuffer</code> instances. You can think about them like C pointers, they just point to a memory region which contain data. You need to know in advance the type of data that they hold in order to process them. In the case of materials, we iterate over that buffer creating instances of the <code>AIMaterial</code> class. In the second case, we iterate over the buffer that holds mesh data creating instance of the <code>AIMesh</code> class.</p>
-<p>Let’s examine the <code>processMaterial</code> method.</p>
+<p>我们处理模型中包含的材质，材质定义组成模型的网格使用的颜色和纹理。然后我们处理不同的网格，模型可以定义多个网格，每个网格都可以使用为模型定义的一种材质。</p>
+<p>如果你看到上面的代码，你可能会看到很多对Assimp库的调用返回的<code>PointerBuffer</code>实例。你可以用C指针那样的方式看待它们，它们只是指向储存数据的内存区域。你需要提前知道它们储存的数据类型，以便处理它们。对于材质，我们迭代该缓冲区，创建<code>AIMaterial</code>类的实例。在第二种情况下，我们迭代储存网格数据的缓冲区，创建<code>AIMesh</code>类的实例。</p>
+<p>让我们看看<code>processMaterial</code>方法：</p>
 <pre><code class="java">private static void processMaterial(AIMaterial aiMaterial, List&lt;Material&gt; materials, String texturesDir) throws Exception {
     AIColor4D colour = AIColor4D.create();
 
@@ -330,9 +335,9 @@ return meshes;
 }
 </code></pre>
 
-<p>We check if the material defines a texture or not. If so, we load the texture. We have created a new class named <code>TextureCache</code> which caches textures. This is due to the fact that several meshes may share the same texture and we do not want to waste space loading again and again the same data. Then we try to get the colours of the material for the ambient, diffuse and specular components. Fortunately, the definition that we had for a material already contained that information.</p>
-<p>The <code>TextureCache</code> definition is very simple is just a map that indexes the different textures by the path to the texture file <script type="math/tex">You can check directly in the source code</script>. Due to the fact, that now textures may use different image formats <script type="math/tex">PNG, JPEG, etc.</script>, we have modified the way that textures are loaded. Instead of using the PNG library, we now use the STB library to be able to load more formats.</p>
-<p>Let’s go back to the <code>StaticMeshesLoader</code> class. The <code>processMesh</code> is defined like this.</p>
+<p>我们检查材质是否定义了纹理。如果有，我们加载纹理。我们创建了一个名为<code>TextureCache</code>的新类，用于缓存纹理。这是因为几个网格可能共享相同的纹理，我们不想浪费空间一次又一次加载相同的数据。然后我们尝试获得环境、漫反射和镜面反射的材质颜色分量。幸运的是，我们对材质的定义已经包含了这些信息。</p>
+<p><code>TextureCache</code>的定义非常简单，它只是一个映射，通过纹理文件的路径对不同的纹理进行索引（你可以直接查看源代码）。由于现在纹理可能使用不同的图像格式（PNG、JPEG等），我们已经修改了纹理的加载方式，现在使用STB库来加载更多的格式，而不是使用PNG库。</p>
+<p>让我们看到<code>StaticMeshesLoader</code>类。<code>processMesh</code>的定义如下：</p>
 <pre><code class="java">private static Mesh processMesh(AIMesh aiMesh, List&lt;Material&gt; materials) {
     List&lt;Float&gt; vertices = new ArrayList&lt;&gt;();
     List&lt;Float&gt; textures = new ArrayList&lt;&gt;();
@@ -362,8 +367,8 @@ return meshes;
 }
 </code></pre>
 
-<p>A <code>Mesh</code> is defined by a set of vertices position, normals directions, texture coordinates and indices. Each of these elements are processed in the <code>processVertices</code>, <code>processNormals</code>, <code>processTextCoords</code> and <code>processIndices</code> methods. A Mesh also may point to a material, using its index. If the index corresponds to the previously processed materials we just simply associate them to the <code>Mesh</code>.</p>
-<p>The <code>processXXX</code> methods are very simple, they just invoke the corresponding method over the <code>AIMesh</code> instance that returns the desired data. For instance, the process processVertices is defined like this:</p>
+<p><code>Mesh</code>由一组顶点位置、法线方向、纹理坐标和索引定义。每个元素都在<code>processVertices</code>、<code>processNormals</code>、<code>processTextCoords</code>和<code>processIndices</code>方法中处理，网格也可以使用其索引指向材质。如果索引与之前处理的材质相对应，我们只需将它们与<code>Mesh</code>相关联。</p>
+<p><code>processXXX</code>方法非常简单，它们只是在返回所需数据的<code>AIMesh</code>实例上调用相应的方法。例如，<code>processVertices</code>的定义如下：</p>
 <pre><code class="java">private static void processVertices(AIMesh aiMesh, List&lt;Float&gt; vertices) {
     AIVector3D.Buffer aiVertices = aiMesh.mVertices();
     while (aiVertices.remaining() &gt; 0) {
@@ -375,47 +380,45 @@ return meshes;
 }
 </code></pre>
 
-<p>You can see that get get a buffer to the vertices by invoking the <code>mVertices</code> method. We just simply process them to create a <code>List</code> of floats that contain the vertices positions. Since, the method returns just a buffer you could pass that information directly to the OpenGL methods that create vertices. We do not do it that way for two reasons. The first one is try to reduce as much as possible the modifications over the code base. Second one is that by loading into an intermediate structure you may be able to perform some pros-processing tasks and even debug the loading process.</p>
-<p>If you want a sample of the much more efficient approach, that is, directly passing the buffers to OpenGL, you can check this <a href="https://github.com/LWJGL/lwjgl3-demos/blob/master/src/org/lwjgl/demo/opengl/assimp/WavefrontObjDemo.java">sample</a>.</p>
-<p>The <code>StaticMeshesLoader</code> makes the <code>OBJLoader</code> class obsolete, so it has been removed from the base source code. A more complex OBJ file is provided as a sample, if you run it you will see something like this:</p>
-<p><img alt="" src="/chapter27/model.png" /></p>
-<h2 id="animations">Animations</h2>
-<p>Now that we have used assimp for loading static meshes we can proceed with animations. If you recall from the animations chapter, the VAO associated to a mesh contains the vertices positions, the texture coordinates, the indices and a list of weights that should be applied to joint positions to modulate final vertex position.</p>
-<h4 id="_2"><img alt="" src="/chapter27/vao_animation.png" /></h4>
-<p>Each vertex position has associated a list of four weights that change the final position, referring the bones indices that will be combined to determine its final position. Each frame, a list of transformation matrices are loaded, as uniforms, for each joint. With that information the final position is calculated.</p>
-<p>In the animation chapter, we developed a MD5 parser to load animated meshes. In this chapter we will use assimp library. This will allow us to load many more formats besides MD5, such as <a href="https://en.wikipedia.org/wiki/COLLADA" title="COLLADA">COLLADA</a>, <a href="https://en.wikipedia.org/wiki/FBX" title="FBX">FBX</a>, etc.</p>
-<p>Before we start coding let’s clarify some terminology. In this chapter we will refer to bones and joints indistinguishably. A joint / bone is are just elements that affect vertices, and that have a parent forming a hierarchy. MD5 format uses the term joint, but assimp uses the term bone.</p>
-<p>Let’s review first the structures handled by assimp that contain animation information. We will start first with the bones and weights information. For each Mesh, we can access the vertices positions, texture coordinates and indices. Meshes store also a list of bones. Each bone is defined by the following attributes:</p>
+<p>你可以看到，我们只是通过调用<code>mVertices</code>方法来获取顶点的缓冲区，简单地处理它们来创建一个储存顶点位置的浮点数列表。因为，该方法只返回一个缓冲区，你可以将该数据直接传给创建顶点的OpenGL方法。但我们不这样做，原因有两个。第一个原因是尽量减少对代码库的修改，第二个原因是，通过加载数据到中间层中，你可以执行一些专门的处理任务，甚至调试加载过程。</p>
+<p>如果你想要一个更有效的示例，即直接将缓冲区传给OpenGL，可以查看这个<a href="https://github.com/LWJGL/lwjgl3-demos/blob/master/src/org/lwjgl/demo/opengl/assimp/WavefrontObjDemo.java">例子</a>。</p>
+<p><code>StaticMeshesLoader</code>类让<code>OBJLoader</code>类过时了，因此它已经从源代码中删除。一个更复杂的OBJ文件已经作为示例提供，如果运行它，你将看到如下内容：</p>
+<p><img alt="模型" src="../_static/27/model.png" /></p>
+<h2 id="_2">动画</h2>
+<p>现在我们已经使用Assimp加载了静态网格，可以继续讲解动画。如果你回想动画一章，与网格关联的VAO包含顶点位置、纹理坐标、索引和应应用于关节位置以调整最终顶点位置的权重列表。</p>
+<p><img alt="VAO动画" src="../_static/27/vao_animation.png" /></p>
+<p>每个顶点位置都关联了一个改变最终位置的四个权重的列表，引用了将组合以确定顶点最终位置的骨骼索引。在每一帧，一个变换矩阵列表将被作为Uniform加载到每个关节。根据这些数据，算出最终位置。</p>
+<p>在动画一章中，我们开发了一个MD5解析器来加载动画网格。在本章中，我们将使用Assimp库。这将允许我们加载MD5之外的更多格式，例如<a href="https://en.wikipedia.org/wiki/COLLADA" title="COLLADA">COLLADA</a>，<a href="https://en.wikipedia.org/wiki/FBX" title="FBX">FBX</a>等。</p>
+<p>在开始编码之前，让我们理清一些术语。在本章中，我们将不加区分地提到骨骼和关节。骨骼或者关节都只是影响顶点的元素，并且具有形成层次的父级。MD5格式使用术语关节，而Assimp使用术语骨骼。</p>
+<p>让我们先看一下由Assimp处理的储存着动画信息的结构。我们将首先从骨骼和权重数据开始。对于每个网格，我们可以访问顶点位置、纹理坐标和索引。网格还储存着骨骼列表，每个骨骼由以下属性定义：</p>
 <ul>
-<li>A name.</li>
-<li>An offset matrix: This will used later to compute the final transformations that should be used by each bone.</li>
+<li>一个名字。</li>
+<li>一个偏移矩阵：稍后将用它来计算每个骨骼应该使用的最终变换。</li>
 </ul>
-<p>Bones also point to a list of weights, each weights. Each weights is defined by the following attributes:</p>
+<p>骨骼还指向一个权重列表，每个权重由以下属性定义：</p>
 <ul>
-<li>A weight factor, that is, the number that will be used to modulate the influence of the bone’s transformation associated to each vertex.</li>
-<li>A vertex identifier, that is, the vertex associated to the current bone.</li>
+<li>一个权重因子，即用于调节与每个顶点相关的骨骼变换影响的数字。</li>
+<li>一个顶点标识符，即与当前骨骼相关联的顶点。</li>
 </ul>
-<p>The following picture shows the relationships between all these elements.</p>
-<h4 id="_3"><img alt="" src="/chapter27/mesh_bones_weights_vertices.png" /></h4>
-<p>Hence, the first thing that we must do is to construct the list of vertices positions, the bones / joints / indices and the associated weights from the structure above. Once we have done that, we need to pre-calculate the transformation matrices for each bone / joint for all the animation frames defined in the model.</p>
-<p>Assimp scene object defines a Node’s hierarchy. Each Node is defined by a name a list of children node. Animations use these nodes to define the transformations that should be applied to. This hierarchy is defined indeed the bones’ hierarchy. Every bone is a node, and has a parent, except the root node, and possible a set of children. There are special nodes that are not bones, they are used to group transformations, and should be handled when calculating the transformations. Another issue is that these Node’s hierarchy is defined from the whole model, we do not have separate hierarchies for each mesh.</p>
-<p>A scene also defines a set of animations. A single model can have more than one animation. You can have animations for a model to walk, run etc. Each of these animations define different transformations. An animation has the following attributes:</p>
+<p>下图展现了所有这些元素之间的关系。</p>
+<p><img alt="网格、骨骼、权重和顶点之间的关系" src="../_static/27/mesh_bones_weights_vertices.png" /></p>
+<p>因此，我们首先要做的事是从上述的结构构造顶点位置、骨骼/关节/索引和相关权重的列表。完成后，我们需要为模型中定一个所有动画帧预先计算每个骨骼/关节的变换矩阵。</p>
+<p>Assimp场景对象是定义节点的层次结构，每个节点都由一个名词和一个子节点列表定义。动画使用这些节点来定义应该应用的变换，这个层次结构实际上定义了骨骼的层次结构。每个骨骼都是一个节点，并且有一个父节点（根节点除外），可能还有一组子节点。有一些特殊的节点不是骨骼，它们用于对变换进行分组，在计算变换时进行处理。另一个问题是，这些节点的层次结构是基于整个模型定义的，对于每个网格，我们没有单独的层次结构。</p>
+<p>场景还定义了一组动画。一个模型可以有多个动画，可以对模型做行走、跑动等动画。每个动画定义了不同的变换。动画具有以下属性：</p>
 <ul>
-<li>A name.</li>
-<li>A duration. That is, the duration in time of the animation. The name may seem confusing since an animation is the list of transformations that should be applied to each node for each different frame. </li>
-<li>A list of animation channels. An animation channel contains, for a specific instant in time the translation, rotation and scaling information that should be applied to each node. The class that models the data contained in the animation channels is the AINodeAnim.</li>
+<li>一个名字。</li>
+<li>持续时间。即动画的持续时间，由于动画是应用于每个不同帧的每个节点的变换列表，因此名称可能看起来很混乱。</li>
+<li>一个动画通道（Animation Channel）的列表。动画通道储存应应用于每个节点的特定时间点的位移、旋转和缩放数据，模型中储存动画通道数据的类是<code>AINodeAnim</code>。</li>
 </ul>
-<p>The following figure shows the relationships between all the elements described above.</p>
-<h4 id="_4"><img alt="" src="/chapter27/node_animations.png" /></h4>
-<p>For a specific instant of time, for a frame, the transformation to be applied to a bone is the transformation defined in the animation channel for that instant, multiplied by the transformations of all the parent nodes up to the root node. Hence, we need to reorder the information stored in the scene, the process is as follows:</p>
+<p>下图展示了上述所有元素之间的关系：</p>
+<p><img alt="节点动画" src="../_static/27/node_animations.png" /></p>
+<p>对于特定的时刻，或者说对于帧，要应用到骨骼的变换是在动画通道中为该时刻定义的变换，乘以所有父节点到根节点的变换。因此，我们需要对场景中存储的信息进行重新排序，流程如下：</p>
 <ul>
-<li>Construct the node hierarchy.</li>
-<li>For each animation, iterate over each animation channel <script type="math/tex">for each animation node</script>:
-   Construct the transformation matrices for all the frames. The transformation m matrix is the composition of the translation, rotation and scale matrix .</li>
-<li>Reorder that information for each frame:
-   Construct the final transformations to be applied for each bone in the Mesh. This is achieved by multiplying the transformation matrix of the bone <script type="math/tex">of the associated node</script> by the transformation matrices of all the parent nodes up to the root node.</li>
+<li>构造节点层次结构。</li>
+<li>对每个动画，迭代每个动画通道（对每个动画节点）：为所有帧构造变换矩阵。变换矩阵是位移、旋转和缩放矩阵的组合。</li>
+<li>重新排列每一帧的信息：构造要应用于网格中每个骨骼的最终变换。这是通过将骨骼的变换矩阵（相关节点的变换矩阵）乘以所有父节点的变换矩阵直到根节点来实现的。</li>
 </ul>
-<p>So let’s start coding. We will first create a class named <code>AnimMeshesLoader</code> which extends from <code>StaticMeshesLoader</code>, but instead of returning an array of Meshes, it returns an <code>AnimGameItem</code> instance. It defines two public methods for that:</p>
+<p>让我们开始编码吧。首先将创建一个名为<code>AnimMeshesLoader</code>的类，它由<code>StaticMeshesLoader</code>扩展，但它不返回网格数组，而是返回一个<code>AnimGameItem</code>实例。它定义了两个公共方法：</p>
 <pre><code class="java">public static AnimGameItem loadAnimGameItem(String resourcePath, String texturesDir)
         throws Exception {
     return loadAnimGameItem(resourcePath, texturesDir,
@@ -458,12 +461,12 @@ public static AnimGameItem loadAnimGameItem(String resourcePath, String textures
 }
 </code></pre>
 
-<p>The methods are quite similar to the ones defined in the <code>StaticMeshesLoader</code> with the following differences:</p>
+<p>这些方法与<code>StaticMeshesLoader</code>中定义的方法非常相似，但有如下区别：</p>
 <ul>
-<li>The method that passes a default set of loading flags, uses this new parameter: <code>aiProcess_LimitBoneWeights</code>. This will limit the maximum number of weights that affect a vertex to four <script type="math/tex">This is also the maximum value that we are currently supporting from the animations chapter</script>.</li>
-<li>The method that actually loads the model just loads the different meshes but it first calculates the node hierarchy and then calls to the <code>processAnimations</code> at the end to build an <code>AnimGameItem</code> instance.</li>
+<li>传递默认加载标记的方法使用了新参数：<code>aiProcess_LimitBoneWeights</code>。这将会将影响顶点的最大权重数限制为4（这也是我们当前在动画章节中支持的最大值）。</li>
+<li>实际加载模型的方法只加载不同的网格，但它首先计算节点层次结构，然后在结尾调用<code>processAnimations</code>以生成<code>AnimGameItem</code>实例。</li>
 </ul>
-<p>The <code>processMesh</code> method is quite similar to the one in the <code>StaticMeshesLoader</code> with the exception that it creates Meshes passing joint indices and weights as a parameter:</p>
+<p><code>processMesh</code>方法与<code>StaticMeshesLoader</code>类中的方法非常相似，只是它创建的网格将关节索引和权重作为参数传递：</p>
 <pre><code class="java">processBones(aiMesh, boneList, boneIds, weights);
 
 Mesh mesh = new Mesh(Utils.listToArray(vertices), Utils.listToArray(textures),
@@ -471,7 +474,7 @@ Mesh mesh = new Mesh(Utils.listToArray(vertices), Utils.listToArray(textures),
     Utils.listIntToArray(boneIds), Utils.listToArray(weights));
 </code></pre>
 
-<p>The joint indices and weights are calculated in the <code>processBones</code> method:</p>
+<p>关节索引和权重按<code>processBones</code>方法计算：</p>
 <pre><code class="java">private static void processBones(AIMesh aiMesh, List&lt;Bone&gt; boneList, List&lt;Integer&gt; boneIds,
         List&lt;Float&gt; weights) {
     Map&lt;Integer, List&lt;VertexWeight&gt;&gt; weightSet = new HashMap&lt;&gt;();
@@ -515,14 +518,14 @@ Mesh mesh = new Mesh(Utils.listToArray(vertices), Utils.listToArray(textures),
 }
 </code></pre>
 
-<p>This method traverses the bone definition for a specific mesh, getting their weights and generating filling up three lists:</p>
+<p>此方法遍历特定网格的骨骼定义，获取其权重并生成三个列表：</p>
 <ul>
-<li><code>boneList</code>: It contains a list of nodes, with their offset matrices. It will uses later on to calculate nodes transformations. A new class named <code>Bone</code> has been created to hold that information. This list will contain the bones for all the meshes.</li>
-<li><code>boneIds</code>: It contains just the identifiers of the bones for each vertex of the <code>Mesh</code>. Bones are identified by its position when rendering. This list only contains the bones for a specific Mesh.</li>
-<li><code>weights</code>: It contains the weights for each vertex of the <code>Mesh</code> to be applied for the associated bones.</li>
+<li><code>boneList</code>：储存节点及其偏移矩阵的列表。稍后将使用它来计算节点变换。已创建一个名为<code>Bone</code>的新类来储存该信息。此列表将储存所有网格的骨骼。</li>
+<li><code>boneIds</code>：只储存包含<code>Mesh</code>的每个顶点的骨骼标识。骨骼在渲染时根据其位置进行标识，此列表仅包含特定网格的骨骼。</li>
+<li><code>weights</code>：储存要应用于关联骨骼的<code>Mesh</code>的每个顶点的权重。</li>
 </ul>
-<p>The information contained in the <code>weights</code> and <code>boneIds</code> is used to construct the <code>Mesh</code> data. The information contained in the boneList will be used later when calculating animation data.</p>
-<p>Let’s go back to the <code>loadAnimGameItem</code> method. Once we have created the Meshes, we also get the transformation which is applied to the root node which will be used also to calculate the final transformation. After that , we need to process the hierarchy of nodes, which is done in the <code>processNodesHierarchy</code> method. This method is quite simple, It just traverses the nodes hierarchy starting from the root node constructing a tree of nodes.</p>
+<p><code>weights</code>和<code>boneIds</code>中储存的数据用于构造<code>Mesh</code>数据。<code>boneList</code>中储存的数据将在稍后计算动画数据时使用。</p>
+<p>让我们回到<code>loadAnimGameItem</code>方法。一旦我们创建了网格，还得到了应用于根节点的变换，该变换也将用于计算最终的变换。之后，我们需要处理节点的层次结构，这是在<code>processNodesHierarchy</code>方法中完成的。这个方法非常简单，它只是从根节点开始遍历节点层次结构，构造一个节点树。</p>
 <pre><code class="java">private static Node processNodesHierarchy(AINode aiNode, Node parentNode) {
     String nodeName = aiNode.mName().dataString();
     Node node = new Node(nodeName, parentNode);
@@ -539,19 +542,19 @@ Mesh mesh = new Mesh(Utils.listToArray(vertices), Utils.listToArray(textures),
 }
 </code></pre>
 
-<p>We have created a new <code>Node</code> class that will contain the relevant information of <code>AINode</code> instances, and provides find methods to locate the nodes hierarchy to find a node by its name. Back in the <code>loadAnimGameItem</code> method, we just use that information to calculate the animations in the <code>processAnimations</code> method. This method returns a <code>Map</code> of <code>Animation</code> instances. Remember that a model can have more than one animation, so they are stored indexed by their names. With that information we can finally construct an <code>AnimAgameItem</code> instance.</p>
-<p>The <code>processAnimations</code> method is defined like this</p>
+<p>我们已经创建了一个新的<code>Node</code>类，该类将储存<code>AINode</code>实例的相关信息，并提供了查找方法来定位节点层次结构，以便按名称查找节点。回到<code>loadAnimGameItem</code>方法，我们只使用该数据计算<code>processAnimations</code>方法中的动画。该方法返回<code>Animation</code>实例的<code>Map</code>。请记住，一个模型可以有多个动画，因此它们按名称储存索引。有了这些数据，我们终于可以构建一个<code>AnimAgameItem</code>实例。</p>
+<p><code>processAnimations</code>方法的定义如下所示：</p>
 <pre><code class="java">private static Map&lt;String, Animation&gt; processAnimations(AIScene aiScene, List&lt;Bone&gt; boneList,
         Node rootNode, Matrix4f rootTransformation) {
     Map&lt;String, Animation&gt; animations = new HashMap&lt;&gt;();
 
-    // Process all animations
+    // 处理所有动画
     int numAnimations = aiScene.mNumAnimations();
     PointerBuffer aiAnimations = aiScene.mAnimations();
     for (int i = 0; i &lt; numAnimations; i++) {
         AIAnimation aiAnimation = AIAnimation.create(aiAnimations.get(i));
 
-        // Calculate transformation matrices for each node
+        // 为每个节点计算变换矩阵
         int numChanels = aiAnimation.mNumChannels();
         PointerBuffer aiChannels = aiAnimation.mChannels();
         for (int j = 0; j &lt; numChanels; j++) {
@@ -569,8 +572,8 @@ Mesh mesh = new Mesh(Utils.listToArray(vertices), Utils.listToArray(textures),
 }
 </code></pre>
 
-<p>For each animation, animation channels are processed. Each channel defines the different transformations that should be applied over time for a node. The transformations defined for each node are defined in the <code>buildTransFormationMatricesmethod</code>. These matrices are stored for each node. Once the nodes hierarchy is filled up with that information we can construct the animation frames.</p>
-<p>Let’s first review the <code>buildTransFormationMatrices</code> method:</p>
+<p>将为每个动画处理其动画通道，每个通道定义了不同的变换，这些变化应该随着时间的推移应用于一个节点。为每个节点定义的变换在<code>buildTransFormationMatrices</code>方法中定义，这些矩阵被每个节点储存。一旦节点层次结构中储存完这些信息，我们就可以构建动画帧。</p>
+<p>让我们先回顾一下<code>buildTransFormationMatrices</code>方法：</p>
 <pre><code class="java">private static void buildTransFormationMatrices(AINodeAnim aiNodeAnim, Node node) {
     int numFrames = aiNodeAnim.mNumPositionKeys();
     AIVectorKey.Buffer positionKeys = aiNodeAnim.mPositionKeys();
@@ -599,7 +602,7 @@ Mesh mesh = new Mesh(Utils.listToArray(vertices), Utils.listToArray(textures),
 }
 </code></pre>
 
-<p>As you can see, an <code>AINodeAnim</code> instance defines a set of keys that contain translation, rotation and scaling information. These keys are referred to specific instant of times. We assume that information is ordered in time, and construct a list of matrices that contain the transformation to be applied for each frame. That final calculation is done in the <code>buildAnimationFrames</code> method:</p>
+<p>如你所见，<code>AINodeAnim</code>实例定义了一组包含位移、旋转和缩放信息的键，这些键是指特定的时刻。我们假设数据是按时间顺序排列的，并构建一个储存要应用于每个帧的变换的矩阵列表。最后的计算是在<code>buildAnimationFrames</code>方法中完成的：</p>
 <pre><code class="java">private static List&lt;AnimatedFrame&gt; buildAnimationFrames(List&lt;Bone&gt; boneList, Node rootNode,
         Matrix4f rootTransformation) {
 
@@ -624,20 +627,27 @@ Mesh mesh = new Mesh(Utils.listToArray(vertices), Utils.listToArray(textures),
 }
 </code></pre>
 
-<p>This method returns a list of <code>AnimatedFrame</code> instances. Each <code>AnimatedFrame</code> instance will contain the list of transformations to be applied for each bone for a specific frame. This method just iterates over the list that contains all the bones. For each bone:</p>
+<p>此方法返回<code>AnimatedFrame</code>实例的列表，每个<code>AnimatedFrame</code>实例将储存要应用于特定帧的每个骨骼的变换列表。这个方法只是迭代储存所有骨骼的列表。对于每个骨骼：</p>
 <ul>
-<li>Gets the associated node.</li>
-<li>Builds a transformation matrix by multiplying the transformation of the associated <code>Node</code> with all the transformations of their parents up to the root node. This is done in the <code>Node.getParentTransforms</code> method.</li>
-<li>It multiplies that matrix with the bone’s offset matrix.</li>
-<li>The final transformation is calculated by multiplying the root’s node transformation with the matrix calculated in the step above.</li>
+<li>获取相关联的节点。</li>
+<li>通过将相关联的<code>Node</code>的变换与其父节点的所有变换相乘，生成变换矩阵，直至根节点。这是在<code>Node.getParentTransforms</code>方法中完成的。</li>
+<li>它将该矩阵与骨骼的偏倚矩阵相乘。</li>
+<li>最后的变换是通过将根节点的变换与上述步骤中计算的矩阵相乘来计算的。</li>
 </ul>
-<p>The rest of the changes in the source code are minor changes to adapt some structures. At the end you will be able to load animations like this one <script type="math/tex">you need yo press space par to change the frame</script>.</p>
-<p><img alt="" src="/chapter27/animation_result.png" /></p>
-<p>The complexity of this sample resides more in the adaptations of the assimp structures to adapt it to the engine used in the book and to pre-calculate the data for each frame. Beyond that, the concepts are similar to the ones presented in the animations chapter. You may try also to modify the source code to interpolate between frames to get smoother animations.</p>
+<p>源代码中的其他修改是为了适应某些结构而进行的微小修改。最后，你能够加载类似于下图的动画（你需要按空格改变帧）：</p>
+<p><img alt="动画效果" src="../_static/27/animation_result.png" /></p>
+<p>这个示例的复杂之处在于Assimp结构的调整，使其适应本书中使用的引擎，并预先计算每个帧的数据。此外，这些概念与动画一章中的概念类似。你可以尝试修改源代码以在帧之间插入，以获得更平滑的动画。</p>
               
             </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../26-cascaded-shadow-maps/" class="btn btn-neutral" title="级联阴影映射（Cascaded Shadow Maps）"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>
@@ -664,6 +674,8 @@ Mesh mesh = new Mesh(Utils.listToArray(vertices), Utils.listToArray(textures),
       
           <a href="https://github.com/Mouse0w0/lwjglbook-CN-Translation/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
+      
+        <span><a href="../26-cascaded-shadow-maps/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
     </span>
