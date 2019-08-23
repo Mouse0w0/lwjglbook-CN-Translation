@@ -8,7 +8,7 @@
   
   <meta name="author" content="Mouse0w0">
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>坐标简介 - Lwjglbook中文翻译</title>
+  <title>附录 A - OpenGL调试 - Lwjglbook中文翻译</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -17,8 +17,8 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "\u5750\u6807\u7b80\u4ecb";
-    var mkdocs_page_input_path = "03-a-brief-about-coordinates.md";
+    var mkdocs_page_name = "\u9644\u5f55 A - OpenGL\u8c03\u8bd5";
+    var mkdocs_page_input_path = "a01-opengl-debugging.md";
     var mkdocs_page_url = null;
   </script>
   
@@ -58,15 +58,9 @@
     <a class="" href="../02-the-game-loop/">游戏循环</a>
 	    </li>
           
-            <li class="toctree-l1 current">
+            <li class="toctree-l1">
 		
-    <a class="current" href="./">坐标简介</a>
-    <ul class="subnav">
-            
-    <li class="toctree-l2"><a href="#a-brief-about-coordinates">坐标简介（A brief about coordinates）</a></li>
-    
-
-    </ul>
+    <a class="" href="../03-a-brief-about-coordinates/">坐标简介</a>
 	    </li>
           
             <li class="toctree-l1">
@@ -189,9 +183,15 @@
     <a class="" href="../27-assimp/">Assimp库</a>
 	    </li>
           
-            <li class="toctree-l1">
+            <li class="toctree-l1 current">
 		
-    <a class="" href="../a01-opengl-debugging/">附录 A - OpenGL调试</a>
+    <a class="current" href="./">附录 A - OpenGL调试</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#a-openglopengl-debugging">附录 A - OpenGL调试（OpenGL Debugging）</a></li>
+    
+
+    </ul>
 	    </li>
           
         </ul>
@@ -216,10 +216,10 @@
     
       
     
-    <li>坐标简介</li>
+    <li>附录 A - OpenGL调试</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="https://github.com/Mouse0w0/lwjglbook-CN-Translation/edit/master/docs/03-a-brief-about-coordinates.md"
+        <a href="https://github.com/Mouse0w0/lwjglbook-CN-Translation/edit/master/docs/a01-opengl-debugging.md"
           class="icon icon-github"> Edit on GitHub</a>
       
     </li>
@@ -229,29 +229,34 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="a-brief-about-coordinates">坐标简介（A brief about coordinates）</h1>
-<p>本章节中我们将讨论坐标和坐标系（coordinate system），尝试以简单的方式介绍一些基本的数学概念，为后面章节将要介绍的技术和内容提供帮助。我们将一些内容简化，为了易于学习而牺牲准确性。</p>
-<p>我们通过指定坐标来确定物体在空间中的位置。想想地图。通过在地图上指定纬度和经度来确定一个点。只需一对数字，就可以精确的确认一个点。这对数字就是点坐标（实际上有些复杂，因为地图是一个不完美的椭圆球体（地球是不完美的椭圆球体）的投影，所以需要更多的数据，但这是一个很好的类比）</p>
-<p>坐标系是一个系统，它使用一个或多个数字，即一个或多个坐标来唯一地指定一个点的位置。存在着多种不同的坐标系（如笛卡尔坐标系，极坐标系等），并且可以将坐标从一个坐标系转换到另一个坐标系。我们将使用笛卡尔坐标系。</p>
-<p>在笛卡尔坐标系中，对于二维，坐标由两个数字定义，它们表示到两个相互垂直的X、Y轴的距离。</p>
-<p><img alt="Cartesian Coordinate System" src="../_static/03/cartesian_coordinate_system.png" /> </p>
-<p>继续类比地图，坐标系定义一个原点。对于地理坐标，原点被设置为赤道和零度经线交叉的点。根据我们原点设置的位置，特定点的坐标是不同的。坐标系也可以定义轴的方向。在上图中，X坐标随着点向右移动而增加，Y坐标随着点向上移动而增加。但是，我们也可以定义一个与笛卡尔坐标系不同的，具有不同的轴取向的坐标系，我们将得到不同的坐标。</p>
-<p><img alt="Alternative Cartesian Coordinate System" src="../_static/03/alt_cartesian_coordinate_system.png" /></p>
-<p>正如你所看到的那样，我们需要定义一些参数，例如原点和轴方向，以便给构成坐标的数字对给出适当的含义。为了使用一组坐标，我们必须使用对应的坐标系。好消息是我们可以通过平移和旋转来将坐标从一个坐标系转换到另一个坐标系。</p>
-<p>如果我们要处理三维坐标，我们需要增加一个轴，即Z轴。三维坐标将由三个数字(x, y, z)构成。</p>
-<p><img alt="3D Cartesian Coordinate System" src="../_static/03/3d_cartesian_coordinate_system.png" /></p>
-<p>在二维笛卡尔坐标系中，只要轴相互垂直，我们就可以改变三维坐标系中的轴的方向。下图展示了另一个三维坐标系。</p>
-<p><img alt="Alternative 3D Cartesian Coordinate System" src="../_static/03/alt_3d_cartesian_coordinate_system.png" /></p>
-<p>三维坐标可分为左手系和右手系两种类型。你怎么知道它是什么类型的？用你的手在你的拇指和食指之间形成一个“L”，中指应指向垂直于其他两个手指的方向。拇指应该指向X轴的正方向，食指应该指向Y轴的正方向，而中指应该指向Z轴的正方向。如果你能用左手做到，那么它就是左手系，如果你需要用右手，那它就是右手系。</p>
-<p><img alt="Right Handed vs Left Handed" src="../_static/03/righthanded_lefthanded.png" /> </p>
-<p>二维坐标系是相同的，因为通过旋转，我们可以从一个坐标系转换到另一个坐标系。但是，三维坐标系并不都是相同的。如果它们可以使用相同的手来表示，也就是说，如果两者都是左手系或者右手系，那么就能通过旋转一个坐标系到另一个坐标系。</p>
-<p>现在我们已经确定了一些基本的概念，让我们来讲解一些在处理三维图形时常用的术语。当我们在之后的章节中解释如何渲染三维模型时，我们将看到我们使用不同的三维坐标系，这是因为每个坐标系都有不同的设定，不同的目的。一组坐标是没有意义的，除非明确它是某个坐标系的坐标。当你看到这个坐标(40.438031, -3.676626)时，你可能会有一个大胆的想法。但是如果我说他们是几何坐标（经度和纬度），你就会发现它们是马德里某个地方的坐标。</p>
-<p>当我们加载三维物体时，我们将得到一组三维坐标。这些坐标在被称为物体坐标系（object coordinate space）的三维坐标系中表达。当建模师在设计这些三维模型的时候，他们对该模型将显示的三维场景毫不知情，因此只能使用与模型相关的坐标系来定义坐标。</p>
-<p>当我们将绘制一个三维场景时，我们所有的三维物体将与被称为世界的坐标系对应。我们需要将三维物体的坐标系转换到世界坐标系。一些物体需要旋转、拉伸、放大和转换，以便在三维场景中能够正确地显示。</p>
-<p>我们还需要限制所显示的三维空间的范围，例如移动摄像机穿梭在我们的三维空间中。然后我们需要将世界坐标转换成摄像机或视口坐标。最后，这些坐标需要转换为二维的屏幕坐标，所以我们需要将三维视图坐标投影到二维屏幕坐标系。</p>
-<p>下面的图片展示了OpenGL坐标系（Z轴垂直于屏幕），坐标在-1和+1之间。</p>
-<p><img alt="OpenGL coordinates" src="../_static/03/opengl_coordinates.png" /> </p>
-<p>如果你不能清晰的理解这些概念，别担心。在下一章节中，它们将用实例表现出来。</p>
+                <h1 id="a-openglopengl-debugging">附录 A - OpenGL调试（OpenGL Debugging）</h1>
+<p>调试OpenGL程序可能是一项艰巨的任务。在大多数情况下，你会看到一个黑屏，你无法知道到底发生了什么。为了缓解这个窘况，我们可以使用一些现有的工具来提供关于渲染流程的更多信息。</p>
+<p>在本附录中，我们将学习如何使用<a href="https://renderdoc.org/" title="RenderDoc">RenderDoc</a>工具调试LWJGL程序。RenderDoc是一个图形调试工程，可以与Direct3D、Vulkan和OpenGL一起使用。对于OpenGL，它仅支持从3.2到4.5的核心模式。</p>
+<p>让我们开始吧，你需要下载并安装对应操作系统的RenderDoc。安装后，当你启动它时，会看到类似于下图的东西：</p>
+<p><img alt="RenderDoc" src="../_static/a01/renderdoc.png" /></p>
+<p>第一步是配置RenderDoc来运行和监视我们的示例。在“Capture Executable”选项卡中，需要设置以下参数：</p>
+<ul>
+<li><strong>Executable path</strong>：在本例中，这应该指向JVM启动程序（例如，“C:\Program Files\Java\jdk-9\bin\java.exe”）。</li>
+<li><strong>Working Directory</strong>：这将为你的程序设置工作目录。在本例中，应该将其设置为Maven转储结果的<code>target</code>目录。这样设置后，可以找到依赖项。</li>
+<li><strong>Command line arguments</strong>：这将包含JVM运行示例所需的参数。在本例中，只需要传递要执行的Jar（例如，“-java game-c28-1.0.jar”）。</li>
+</ul>
+<p><img alt="运行参数" src="../_static/a01/exec_arguments.png" /></p>
+<p>你要记住3D模型现已由<a href="http://assimp.sourceforge.net/" title="Assimp">Assimp</a>库加载，我们需要的是实际的文件路径（而不是<code>CLASSPATH</code>的相对路径），因此你需要在你设置的工作目录检查路径。在此情况下，最简单快速的测试方法是将src文件夹复制到<code>target</code>目录中。</p>
+<p>此选项卡中还有许多其他选项用于配置捕获选项。你可以在<a href="https://renderdoc.org/docs/index.html" title="RenderDoc文档">RenderDoc文档</a>中查阅它们的用途。一切就绪后，你可以通过点击“Launch”按钮来开始运行程序。你将看到如下内容：</p>
+<p><img alt="示例" src="../_static/a01/sample.png" /></p>
+<p>你可能会看到一个警告，因为RenderDoc只能使用OpenGL核心模式。在本例中，我们已经启用了兼容性模式，但它会忽略警告继续工作。程序运行后，你就可以触发它的快照。你将看到添加了一个新的选项卡，名为“java [PID XXXX]”（其中XXXX数字表示Java进程的PID、进程标识号）</p>
+<p><img alt="Java进程" src="../_static/a01/java_process.png" /></p>
+<p>从该选项卡中，你可以通过按下“Trigger capture”按钮来捕获程序的状态。生成了一个捕获结果后，你将在同一个选项卡中看到一个小快照。</p>
+<p><img alt="捕获" src="../_static/a01/capture.png" /></p>
+<p>如果双击该捕获结果，则将加载收集的所有数据，并可以开始查看它。“Event Browser”面板将显示所有在一个渲染周期内执行的与OpenGL相关的调用。</p>
+<p><img alt="事件浏览器" src="../_static/a01/event_browser.png" /></p>
+<p>对于第一个渲染流程，你可以看到地面是如何在模型房屋的网格之后绘制的。如果单击一个glDrawELements事件，并选择“Mesh”选项卡，则可以查看绘制的网格，事件的顶点着色器的输入与输出。</p>
+<p>你换可以查看用于该绘制操作的输入纹理（通过单击“Texture Viewer”选项卡）。</p>
+<p><img alt="纹理输入" src="../_static/a01/texture_inputs.png" /></p>
+<p>在中央面板中，你可以看到输出，在右侧面板上可以看到用于输入的纹理列表。还可以逐个查看输出纹理。这很好地说明了延迟着色是如何工作的。</p>
+<p><img alt="纹理输出" src="../_static/a01/texture_outputs.png" /></p>
+<p>如你所见，该工具提供了有关渲染时发生的情况的宝贵数据，它可以在调试渲染问题时节省宝贵的时间。它甚至可以显示有关渲染管线中使用的着色器的信息。</p>
+<p><img alt="管线状态" src="../_static/a01/pipeline_state.png" /></p>
               
             </div>
           </div>
@@ -259,10 +264,8 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../04-rendering/" class="btn btn-neutral float-right" title="渲染">Next <span class="icon icon-circle-arrow-right"></span></a>
       
-      
-        <a href="../02-the-game-loop/" class="btn btn-neutral" title="游戏循环"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../27-assimp/" class="btn btn-neutral" title="Assimp库"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -292,10 +295,8 @@
           <a href="https://github.com/Mouse0w0/lwjglbook-CN-Translation/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../02-the-game-loop/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../27-assimp/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
-      
-        <span style="margin-left: 15px"><a href="../04-rendering/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
