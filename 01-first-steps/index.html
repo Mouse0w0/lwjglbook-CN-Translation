@@ -295,7 +295,7 @@
 
 <p>此外，每个项目生成一个可运行的Jar（一种可以通过输入<code>java -jar name_of_the_jar.jar</code>就可运行的Jar）。这是通过使用Maven的<code>maven-jar-plugin</code>插件实现的，该插件创建了一个含有<code>MANIFEST.MF</code>文件的Jar，并且文件内有指定的值。该文件最重要的属性就是<code>Main-Class</code>，它指明了程序的入口。此外，所有的依赖库都被设置在该文件的<code>Class-Path</code>属性中。要在另一台计算机上运行它，你只需要复制位于目标目录下的主Jar文件和Lib目录（包括其中所有的Jar文件）。</p>
 <p>Jar文件包含着LWJGL类和本地库。LWJGL还将负责提取它们，并将它们添加到JVM的库路径中。</p>
-<p>本章的源代码是LWJGL网站(<a href="http://www.lwjgl.org/guide">http://www.lwjgl.org/guide</a>)的入门示例，你可以看到我们没有使用Swing或JavaFX作为我们的GUI库。我们使用的是<a href="www.glfw.org">GLFW</a>，它是一个用来处理GUI组件（窗口等）和事件（按键按下、鼠标移动等），并且与OpenGL上下文进行简单连接的库。此前版本的LWJGL提供了一个自定义GUI API，但在LWJGL 3中，GLFW是首选的窗口API。</p>
+<p>本章的源代码是LWJGL网站(<a href="https://www.lwjgl.org/guide">https://www.lwjgl.org/guide</a>)的入门示例，你可以看到我们没有使用Swing或JavaFX作为我们的GUI库。我们使用的是<a href="https://www.glfw.org/">GLFW</a>，它是一个用来处理GUI组件（窗口等）和事件（按键按下、鼠标移动等），并且与OpenGL上下文进行简单连接的库。此前版本的LWJGL提供了一个自定义GUI API，但在LWJGL 3中，GLFW是首选的窗口API。</p>
 <p>示例源码是简单的并且有着良好的文档，所以我们不会在书中再次说明。</p>
 <p>如果你正确地配置了环境，你应该能够运行它并且看到一个有着红色背景的窗口。</p>
 <p><img alt="Hello World" src="../_static/01/hello_world.png" /></p>
