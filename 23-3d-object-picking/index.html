@@ -314,7 +314,7 @@ uniform float selectedNonInstanced;
 <p>在进入循环之前，我们需要摄像机所面向的方向向量。这很简单，只需使用视图矩阵去获得考虑相机旋转的Z方向。记住，正Z指向屏幕外，所以需要相反的方向向量，这就是为什么要反方向（<code>negate</code>）。</p>
 <p><img alt="摄像机" src="../_static/23/camera.png" /></p>
 <p>在游戏循环中，每个<code>GameItem</code>都要进行相交计算。但是，我们该怎么做呢？这就是<a href="https://github.com/JOML-CI/JOML" title="JOML">JOML</a>库来帮忙的地方了。我们使用的是<a href="https://github.com/JOML-CI/JOML" title="JOML">JOML</a>的<code>Intersectionf</code>类，它提供了几种计算二维和三维交点的方法。具体来说，我们使用的是<code>intersectRayAab</code>方法。</p>
-<p>该方法实现了轴对齐边界框（Axis Aligned Bounding Box，简称AABB）交点检测算法。你可以查看JOML文档中指出的<a href="(http://people.csail.mit.edu/amy/papers/box-jgt.pdf" title="这里">详细信息</a>。</p>
+<p>该方法实现了轴对齐边界框（Axis Aligned Bounding Box，简称AABB）交点检测算法。你可以查看JOML文档中指出的<a href="http://people.csail.mit.edu/amy/papers/box-jgt.pdf" title="这里">详细信息</a>。</p>
 <p>该方法测试由原点和方向定义的射线是否与由最小和最大坐标定义的边界框相交。这个算法是有效的，因为我们的立方体是轴对齐的，如果旋转它们，这个方法就不起作用。因此，该方法接收以下参数：</p>
 <ul>
 <li>一个原点：在本例中，这是摄像机的位置。</li>
