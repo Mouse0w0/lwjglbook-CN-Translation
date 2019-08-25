@@ -8,7 +8,7 @@
   
   <meta name="author" content="Mouse0w0">
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>延迟着色（Deferred Shading） - Lwjglbook中文翻译</title>
+  <title>延迟着色法 - Lwjglbook中文翻译</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -17,7 +17,7 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "\u5ef6\u8fdf\u7740\u8272\uff08Deferred Shading\uff09";
+    var mkdocs_page_name = "\u5ef6\u8fdf\u7740\u8272\u6cd5";
     var mkdocs_page_input_path = "28-deferred-shading.md";
     var mkdocs_page_url = null;
   </script>
@@ -183,6 +183,17 @@
     <a class="" href="../27-assimp/">Assimp库</a>
 	    </li>
           
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">延迟着色法</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#deferred-shading">延迟着色法（Deferred Shading）</a></li>
+    
+
+    </ul>
+	    </li>
+          
             <li class="toctree-l1">
 		
     <a class="" href="../a01-opengl-debugging/">附录 A - OpenGL调试</a>
@@ -210,7 +221,7 @@
     
       
     
-    <li>延迟着色（Deferred Shading）</li>
+    <li>延迟着色法</li>
     <li class="wy-breadcrumbs-aside">
       
         <a href="https://github.com/Mouse0w0/lwjglbook-CN-Translation/edit/master/docs/28-deferred-shading.md"
@@ -223,22 +234,22 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="deferred-shading">延迟着色（Deferred Shading）</h1>
-<p>Up to now the way that we are rendering a 3D scene is called forward rendering. We first render the 3D objects and apply the texture and lighting effects in a fragment shader. This method is not very efficient if we have a complex fragment shader pass with many lights and complex effects. In addition to that we may end up applying these effects to fragments that may be later on discarded due to depth testing <script type="math/tex">although this is not exactly true if we enable [early fragment testing](https://www.khronos.org/opengl/wiki/Early_Fragment_Test)</script>.</p>
-<p>In order to alleviate the problems described above we may change thy way that we render the scene by using a technical called deferred shading. With deferred shading we first render the geometry information that is required in later stages <script type="math/tex">in the fragment shader</script> to a buffer. The complex calculus required by the fragment shader are postponed, deferred, to a later stage when using the information stored in those buffers.</p>
-<p>Hence, with deferred shading we perform two rendering passes. The first one, is the geometry pass, where we render the scene to a buffer that will contain the following information:</p>
+                <h1 id="deferred-shading">延迟着色法（Deferred Shading）</h1>
+<p>到目前为止，我们渲染三维场景的方式称为正向渲染法（Forward Rendering）。我们首先渲染3D对象，并在片元着色器中应用纹理和光照效果。如果我们有一个具有多种光照和复杂效果的复杂片元着色器处理阶段，这种方法就不是很高效。此外，我们最终可能会将这些效果应用到稍后可能由于深度测试而被丢弃的片元上（尽管这并不完全正确，如果我们启用<a href="https://www.khronos.org/opengl/wiki/Early_Fragment_Test">早期片元测试</a>的话）。</p>
+<p>为了缓解上述问题，我们可以改变方式，使用一种称为延迟着色法的技术来渲染场景。通过延迟着色法，我们先将后期（在片元着色器中）所需的几何信息渲染到缓冲区。当使用储存在这些缓冲区中的信息时，片元着色器所需的复杂运算被推迟（Postpone）、延迟（Defer）到之后的阶段。</p>
+<p>因此，使用延迟着色法，我们进行两个渲染阶段（Pass）。第一个是几何处理阶段，我们将场景渲染到储存以下数据的缓冲区中：</p>
 <ul>
-<li>The positions <script type="math/tex">in our case in light view coordinate system, although you may see other samples where world coordinates are used</script>.</li>
-<li>The diffuse colours for each position.</li>
-<li>The specular component for each position.</li>
-<li>The normals at each position <script type="math/tex">also in light view coordinate system</script>.</li>
-<li>Shadow map for the directional light <script type="math/tex">you may find that this step is done separately in other implementations</script>.</li>
+<li>位置（在本例中，在光照视图坐标系中，尽管你可以看到使用世界坐标的其他示例）。</li>
+<li>每个位置的漫反射颜色。</li>
+<li>每个位置的镜面反射分量。</li>
+<li>每个位置的法线（也在光照视图坐标系中）。</li>
+<li>有向光的阴影图（你可能会发现这一步在其他实现中是单独完成的）。</li>
 </ul>
-<p>All that information is stored in a buffer called G-Buffer.</p>
-<p>The second pass is called the lighting pass. This pass takes a quad that fills up all the screen and generates the colour information for each fragment using the information contained in the G-Buffer. When we will be performing the lighting pass, the depth test will have already removed all the scene data that would not be seen. Hence, the number of operations to be done are restricted to what will be displayed on the screen.</p>
-<p><img alt="" src="/chapter28/schema.png" /></p>
-<p>You may be asking if performing additional rendering passes will result in an increase of performance or not. The answer is that it depends. Deferred shading is usually used when you have many different light passes. In this case, the additional rendering steps are compensated by the reduction of operations that will be done in the fragment shader.</p>
-<p>So let’s start coding. The first task that we will be doing is create a new class for the G-Buffer. The class, named <code>GBuffer</code>, is defined like this:</p>
+<p>所有这些数据都存储在一个称为G缓冲区（G-Buffer）的缓冲区中。</p>
+<p>第二个阶段称为光照处理阶段，该阶段需要一个充满整个屏幕的矩形，并使用G缓冲区中储存的信息为每个片元生成颜色信息。当我们进行光照处理阶段时，深度测试将删除所有看不到的场景数据。因此，要执行的操作数量仅限于将在屏幕上显示的。</p>
+<p><img alt="流程图" src="../_static/28/schema.png" /></p>
+<p>你可能会问进行额外的渲染阶段能否提高性能，答案是视情况而定。延迟着色法通常在有许多不同的光照处理阶段时使用，在此情况下，额外的渲染阶段将通过减少将在片元着色器中执行的操作来补偿。</p>
+<p>让我们开始编码吧，首先要做的是为G缓冲区创建一个新类，名为<code>GBuffer</code>，其定义如下所示：</p>
 <pre><code class="java">package org.lwjglb.engine.graph;
 
 import org.lwjgl.system.MemoryStack;
@@ -262,10 +273,10 @@ public class GBuffer {
     private int height;
 </code></pre>
 
-<p>The class defines a constant that models the maximum number of buffers to be used. The identifier associated to the G-Buffer itself and an array for the individual buffers. The size of the screen is also stored.</p>
-<p>Let’s review the constructor:</p>
+<p>类定义了一个常量，该常量为要使用的最大缓冲区数建模。与G缓冲区本身关联的ID，以及单个缓冲区的数组，屏幕的大小也会被储存。</p>
+<p>让我们看一下构造函数：</p>
 <pre><code class="java">public GBuffer(Window window) throws Exception {
-    // Create G-Buffer
+    // 创建G缓冲区
     gBufferId = glGenFramebuffers();
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, gBufferId);
 
@@ -275,14 +286,14 @@ public class GBuffer {
     this.width = window.getWidth();
     this.height = window.getHeight();
 
-    // Create textures for position, diffuse color, specular color, normal, shadow factor and depth
-    // All coordinates are in world coordinates system
+    // 为位置、漫反射颜色、镜面反射颜色、法线、阴影因子和深度创建纹理
+    // 所有坐标都在世界坐标系中
     for(int i=0; i&lt;TOTAL_TEXTURES; i++) {
         glBindTexture(GL_TEXTURE_2D, textureIds[i]);
         int attachmentType;
         switch(i) {
             case TOTAL_TEXTURES - 1:
-                // Depth component
+                // 深度分量
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT,
                         (ByteBuffer) null);
                 attachmentType = GL_DEPTH_ATTACHMENT;
@@ -292,11 +303,11 @@ public class GBuffer {
                 attachmentType = GL_COLOR_ATTACHMENT0 + i;
                 break;
         }
-        // For sampling
+        // 用于采样
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-        // Attach the texture to the G-Buffer
+        // 将纹理绑定到G缓冲区
         glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentType, GL_TEXTURE_2D, textureIds[i], 0);
     }
 
@@ -310,20 +321,20 @@ public class GBuffer {
         glDrawBuffers(intBuff);
     }
 
-    // Unbind
+    // 解绑
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 </code></pre>
 
-<p>The first thing that we do is create a frame buffer. Remember that a frame buffer is just an OpenGL objects that can be used to render operations instead of rendering to the screen. Then we generate a set of textures <script type="math/tex">6 textures</script>, that will be associated to the frame buffer.</p>
-<p>After that, we use a for loop to initialize the textures. We have the following types:</p>
+<p>首先我们要做的事是创建一个帧缓冲区。记住，帧缓冲区只是一个OpenGL对象，可用于渲染操作，而不是渲染到屏幕。然后我们生成一组纹理（6个纹理），这些纹理将与帧缓冲区关联。</p>
+<p>之后，我们使用for循环来初始化纹理，有如下类型：</p>
 <ul>
-<li>“Regular textures”, that will store positions, normals, the diffuse component, etc.</li>
-<li>A texture for storing the depth buffer. This will be our last texture.</li>
+<li>“常规纹理”，将储存位置、法线和漫反射分量等。</li>
+<li>用于储存深度缓冲区的纹理，这将是最后的纹理。</li>
 </ul>
-<p>Once the texture has been initialized, we enable sampling for them and attach them to the frame buffer. Each texture is attached using an identifier which starts at <code>GL_COLOR_ATTACHMENT0</code>. Each texture increments by one that id, so the positions are attached using <code>GL_COLOR_ATTACHMENT0</code>, the diffuse component uses <code>GL_COLOR_ATTACHMENT1</code> <script type="math/tex">which is <code>GL_COLOR_ATTACHMENT0 + 1</code></script>, and so on.</p>
-<p>After all the textures have been created, we need to enable them to be used by the fragment shader for rendering. This is done with the <code>glDrawBuffers</code> call. We just pass the array with the identifiers of the colour attachments used <script type="math/tex"><code>GL_COLOR_ ATTACHMENT0</code> to <code>GL_COLOR_ATTACHMENT5</code></script>.</p>
-<p>The rest of the class are just getter methods and the cleanup one.</p>
+<p>纹理初始化后，我们为它们启用采样并将它们绑定到帧缓冲区。每个纹理使用以<code>GL_COLOR_ATTACHMENT0</code>为开头的ID进行绑定。每个纹理都以该ID递增一位，因此坐标使用<code>GL_COLOR_ATTACHMENT0</code>绑定，漫反射分量使用<code>GL_COLOR_ATTACHMENT1</code>（即<code>GL_COLOR_ATTACHMENT0 + 1</code>）附加，以此类推。</p>
+<p>在创建完所有纹理之后，我们需要让片元着色器使用它们进行渲染。这是通过调用<code>glDrawBuffers</code>完成的。我们只传递带有所用颜色绑定的ID的数组（<code>GL_COLOR_ ATTACHMENT0</code>到<code>GL_COLOR_ATTACHMENT5</code>）。</p>
+<p>类的其他部分只是getter方法和<code>cleanup</code>方法。</p>
 <pre><code class="java">public int getWidth() {
     return width;
 }
@@ -359,7 +370,7 @@ public void cleanUp() {
 }
 </code></pre>
 
-<p>We will create a new class named <code>SceneBuffer</code> which is just another frame buffer. We will use it when performing the light pass. Instead of rendering directly to the screen we will render to this frame buffer. By doing it this way, we can apply the rest of the effects <script type="math/tex">such as fog, skybox, etc.</script>. The class is defined like this.</p>
+<p>我们将创建一个名为<code>SceneBuffer</code>的新类，它只是另一个帧缓冲区，将在执行光照处理阶段时使用它。我们不直接渲染到屏幕，而是渲染到这个帧缓冲区。这样做，我们可以应用其他效果（如雾、天空盒等）。类的定义如下：</p>
 <pre><code class="java">package org.lwjglb.engine.graph;
 
 import org.lwjglb.engine.Window;
@@ -376,25 +387,25 @@ public class SceneBuffer {
     private int textureId;
 
     public SceneBuffer(Window window) throws Exception {
-        // Create the buffer
+        // 创建缓冲区
         bufferId = glGenFramebuffers();
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, bufferId);
 
-        // Create texture
+        // 创建纹理
         int[] textureIds = new int[1];
         glGenTextures(textureIds);
         textureId = textureIds[0];
         glBindTexture(GL_TEXTURE_2D, textureId);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, window.getWidth(), window.getHeight(), 0, GL_RGB, GL_FLOAT, (ByteBuffer) null);
 
-        // For sampling
+        // 用于采样
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-        // Attach the texture to the G-Buffer
+        // 附加纹理到G缓冲区
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureId, 0);
 
-        // Unbind
+        // 解绑
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
@@ -414,8 +425,8 @@ public class SceneBuffer {
 }
 </code></pre>
 
-<p>As you can see, this is similar to the <code>GBuffer</code> class, but here we will only use a single texture to store the resulting colours. Now that we have created these new classes, we can start using them. In the <code>Renderer</code> class, we will no longer be using the forward rendering shaders we were using for rendering the scene <script type="math/tex">named <code>“scene_vertex.vs”</code> and <code>“scene_fragment.fs”</code></script>.</p>
-<p>In the <code>init</code> method of the <code>Renderer</code> class you may see that a <code>GBuffer</code> instance is created and that we initialize and another set of shaders for the geometry pass <script type="math/tex">by calling the <code>setupGeometryShader</code> method</script> and the light pass <script type="math/tex">by calling the <code>setupDirLightShader</code> and <code>setupPointLightShader</code> methods</script>. You may see also that we create a instance of the class <code>SceneBuffer</code> named <code>sceneBuffer</code>. This will be used when rendering lights as explained before. An utility matrix named <code>bufferPassModelMatrix</code> is also instantiated <script type="math/tex">it will be used when performing the geometry pass</script>. You can see that we create a new <code>Mesh</code> at the end of the init method. This will be used in the light pass. More on this will be explained later.</p>
+<p>如你所见，它类似于<code>GBuffer</code>类，但这里只使用一个纹理来储存生成的颜色。既然已经创建了这些新类，我们就可以开始使用它们了。在<code>Renderer</code>类中，我们将不再使用用于渲染场景的正向渲染着色器（名为<code>scene_vertex.vs</code>和<code>scene_fragment.fs</code>）。</p>
+<p>在<code>Renderer</code>类的<code>init</code>方法中，你会看到创建了一个<code>GBuffer</code>实现，我们分别为几何处理阶段（通过调用<code>setupGeometryShader</code>方法）和光照处理阶段（通过调用<code>setupDirLightShader</code>和<code>setupPointLightShader</code>方法）初始化了另一组着色器。你换可以看到我们创建了一个名为<code>sceneBuffer</code>的<code>SceneBuffer</code>类的实例，如上所述，它将在渲染光照时使用。名为<code>bufferPassModelMatrix</code>的实用矩阵也被实例化（在执行几何处理阶段时将使用它）。你可以看到我们在<code>init</code>方法的末尾创建了一个新的<code>Mesh</code>，它将用于光照处理阶段。关于这方面的详情将在之后介绍。</p>
 <pre><code class="java">public void init(Window window) throws Exception {
     shadowRenderer.init(window);
     gBuffer = new GBuffer(window);
@@ -432,8 +443,8 @@ public class SceneBuffer {
 }
 </code></pre>
 
-<p>The shaders used in the geometry and light passes are defined like usual <script type="math/tex">you can check the source code directly</script>. Let’s focus in their content instead. Let’s focus in their content instead. We will start with the geometry pass, here’s the vertex shader code <script type="math/tex"><code>gbuffer_vertex.vs</code></script>:</p>
-<pre><code>#version 330
+<p>几何处理阶段和光照处理阶段使用的着色器定义与通常一致（你可以直接查看源代码），让我们关注它们的内容。我们将从几何处理阶段开始，接下来是顶点着色器代码（<code>gbuffer_vertex.vs</code>）：</p>
+<pre><code class="glsl">#version 330
 
 const int MAX_WEIGHTS = 4;
 const int MAX_JOINTS = 150;
@@ -523,8 +534,8 @@ void main()
 }
 </code></pre>
 
-<p>This shader is very similar to the vertex shader used in previous chapters to render a scene. There are some changes in the name of the output variables but in essence is the same shader. Indeed, it should be almost the same, the way we render the vertices should not change, the major changes are done in the fragment shader, which is defined like this <script type="math/tex"><code>gbuffer_fragment.fs</code></script>:</p>
-<pre><code>#version 330
+<p>此着色器与上一章中用于渲染场景的顶点着色器非常相似，输出变量的名称有一些变化，但本质上是相同的着色器。事实上，它应该是几近一致的，我们渲染顶点的方式不应该改变，主要的更改是在片元着色器中，它是这样定义的（<code>gbuffer_fragment.fs</code>）：</p>
+<pre><code class="glsl">#version 330
 
 const int NUM_CASCADES = 3;
 
@@ -674,17 +685,17 @@ void main()
 }
 </code></pre>
 
-<p>The most relevant lines are:</p>
-<pre><code>layout (location = 0) out vec3 fs_worldpos;
+<p>最关键的行是：</p>
+<pre><code class="glsl">layout (location = 0) out vec3 fs_worldpos;
 layout (location = 1) out vec3 fs_diffuse;
 layout (location = 2) out vec3 fs_specular;
 layout (location = 3) out vec3 fs_normal;
 layout (location = 4) out vec2 fs_shadow;
 </code></pre>
 
-<p>This is where we are referring to the textures that this fragment shader will write to. As you can see we just dump the position <script type="math/tex">in light view coordinates</script>, the diffuse colour <script type="math/tex">which can be the colour of the associated texture of a component of the material</script>, the specular component, the normal, and the depth values for the shadow map.</p>
-<p>SIDE NOTE: We have simplified the <code>Material</code> class definition removing the ambient colour component.</p>
-<p>Going back to the <code>Renderer</code> class, the render method is defined like this:</p>
+<p>这就是我们要引用该片元着色器将写入的纹理的地方。如你所见，我们只是转储位置（在光照视图坐标系中）、漫反射颜色（可以是材质相关的纹理的颜色分量）、镜面反射分量、法线和阴影图的深度值。</p>
+<p>旁注：我们已经简化了<code>Material</code>类的定义，删除了环境颜色分量。</p>
+<p>回到<code>Renderer</code>类，<code>render</code>方法的定义如下：</p>
 <pre><code class="java">public void render(Window window, Camera camera, Scene scene, boolean sceneChanged) {
     clear();
 
@@ -694,14 +705,14 @@ layout (location = 4) out vec2 fs_shadow;
         frustumFilter.filter(scene.getGameInstancedMeshes());
     }
 
-    // Render depth map before view ports has been set up
+    // 在设置视口之前渲染深度图
     if (scene.isRenderShadows() &amp;&amp; sceneChanged) {
         shadowRenderer.render(window, scene, camera, transformation, this);
     }
 
     glViewport(0, 0, window.getWidth(), window.getHeight());
 
-    // Update projection matrix once per render cycle
+    // 每个渲染周期更新投影矩阵一次
     window.updateProjectionMatrix();
 
     renderGeometry(window, camera, scene);
@@ -717,10 +728,10 @@ layout (location = 4) out vec2 fs_shadow;
 }
 </code></pre>
 
-<p>The geometry pass is done in the <code>renderGeometry</code> method <script type="math/tex">you can see that we no longer have a <code>renderScene</code></script>. The lighting pass is done in several steps, first we setup the buffer and other parameters to be used <script type="math/tex"><code>initLightRendering</code></script>, then we render point lights <script type="math/tex"><code>renderPointLights</code></script> and the directional light <script type="math/tex"><code>renderDirectionalLight</code></script> and finally the state is restored <script type="math/tex"><code>endLightRendering</code></script>.</p>
-<p>Let’s start with the geometry pass. The <code>renderGeometry</code> method is almost equivalent to the <code>renderScene</code> method used in previous chapters:</p>
+<p>几何处理阶段是在<code>renderGeometry</code>方法中完成的（你可以看到我们不再有<code>renderScene</code>）。光照处理阶段分几个步骤完成，首先设置要使用的缓冲区和其他参数（在<code>initLightRendering</code>中），然后渲染点光源（在<code>renderPointLights</code>中）和平行光（在<code>renderDirectionalLight</code>中），最后恢复状态（在<code>endLightRendering</code>中）。</p>
+<p>让我们从几何处理阶段开始。<code>renderGeometry</code>方法几乎等同于在前几章中使用的<code>renderScene</code>方法：</p>
 <pre><code class="java">private void renderGeometry(Window window, Camera camera, Scene scene) {
-    // Render G-Buffer for writing
+    // 渲染G缓冲区以便写入
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, gBuffer.getGBufferId());
 
     clear();
@@ -761,41 +772,41 @@ layout (location = 4) out vec2 fs_shadow;
 }
 </code></pre>
 
-<p>The only differences are:</p>
+<p>仅有的区别是：</p>
 <ul>
-<li>We bind to the G-Buffer instead of the screen.</li>
-<li>We disable blending. Since we just want to work with the values that are closest to the camera <script type="math/tex">the lowest depth values</script>, we do not need blending.</li>
+<li>我们绑定到G缓冲区而不是屏幕。</li>
+<li>禁用混合，因为我们只想使用最接近摄像机的值（最小深度值），所以不需要混合。</li>
 </ul>
-<p>If you debug the sample execution with an OpenGL debugger <script type="math/tex">such as RenderDoc</script>, you can view the textures generated during the geometry pass. The positions texture will look like this:</p>
-<p><img alt="" src="/chapter28/text_positions.png" /></p>
-<p>The texture that holds the values for the diffuse component will look like this:</p>
-<p><img alt="" src="/chapter28/text_diffuse.png" /></p>
-<p>The texture that holds the values for the normals will look like this:</p>
-<p><img alt="" src="/chapter28/text_normals.png" /></p>
-<p>Now it’s the turn of the light pass. We first need to set up a few things before rendering, this is done in the <code>initLightRendering</code> method:</p>
+<p>如果使用OpenGL调试器（如RenderDoc）调试示例，则可以看到几何处理阶段期间生成的纹理。位置纹理将如下所示：</p>
+<p><img alt="位置纹理" src="../_static/28/text_positions.png" /></p>
+<p>储存漫反射分量值的纹理如下所示：</p>
+<p><img alt="漫反射纹理" src="../_static/28/text_diffuse.png" /></p>
+<p>储存法线值的纹理如下所示：</p>
+<p><img alt="法线纹理" src="../_static/28/text_normals.png" /></p>
+<p>现在轮到光照处理阶段了。我们首先需要在渲染之前设置一些东西，这是在<code>initLightRendering</code>方法中完成的：</p>
 <pre><code class="java">private void initLightRendering() {
-    // Bind scene buffer
+    // 绑定场景缓冲区
     glBindFramebuffer(GL_FRAMEBUFFER, sceneBuffer.getBufferId());
 
-    // Clear G-Buffer
+    // 清理G缓冲区
     clear();
 
-    // Disable depth testing to allow the drawing of multiple layers with the same depth
+    // 禁用深度测试以允许绘制具有相同深度的多个图层
     glDisable(GL_DEPTH_TEST);
 
     glEnable(GL_BLEND);
     glBlendEquation(GL_FUNC_ADD);
     glBlendFunc(GL_ONE, GL_ONE);
 
-    // Bind GBuffer for reading
+    // 绑定G缓冲区以便读取
     glBindFramebuffer(GL_READ_FRAMEBUFFER, gBuffer.getGBufferId());
 }
 </code></pre>
 
-<p>Since we won’t be rendering to the screen, we first need to bind to the texture that will hold the results of the lighting pass. Then we clear that buffer and disable depth testing. This is not required any more, as depth testing has been already done in the geometry pass. Another important step is to enable blending. The last action is to enable the G-Buffer for reading, it will be used during the light pass.</p>
-<p>Before analyzing the render methods for the different types of light, let’s think a little bit about how we will render the lights. We need to use the contents of the G-Buffer, but in order to use them, we need to first render something. But, we have already drawn the scene, what are we going to render. now? The answer is simple, we just need to render a quad that fills all the screen. For each fragment of that quad, we will use the data contained in the G-Buffer and generate the correct output colour. Do you remember the <code>Mesh</code> that we loaded in the init method of the <code>Renderer</code> class? It was named <code>bufferPassMesh</code>, and it just contains that, a quad that fills up the whole screen.</p>
-<p>So, how the vertex shader for the light pass looks like?</p>
-<pre><code>#version 330
+<p>因为我们不会渲染到屏幕上，所以首先需要绑定到纹理上，该纹理将保存光照处理阶段的结果。然后清除缓冲区并禁用深度测试。因为已经在几何处理阶段进行了深度测试，这就不再需要了。另一重要步骤是启用混合。最后一个操作是启用G缓冲区进行读取，它将在光照处理阶段期间使用。</p>
+<p>在分析不同光照的渲染方法之前，让我们稍微考虑一下如何渲染光照。我们需要使用G缓冲区的内容，但为了使用它们，需要先渲染一些东西。但是，我们已经绘制了场景，现在要渲染什么？答案很简单，我们只需要渲染一个充满了整个屏幕的矩形。对于该矩形的每个片元，我们将使用G缓冲区中储存的数据并生成正确的输出颜色。你还记得我们在<code>Renderer</code>类的<code>init</code>方法中加载的<code>Mesh</code>吗？它被命名为<code>bufferPassMesh</code>，它只储存一个充满整个屏幕的矩形。</p>
+<p>那么，光照处理阶段的顶点着色器看起来是怎样的？</p>
+<pre><code class="glsl">#version 330
 
 layout (location=0) in vec3 position;
 uniform mat4 projectionMatrix;
@@ -807,9 +818,9 @@ void main()
 }
 </code></pre>
 
-<p>The code above is the vertex shader used when rendering point lights and directional light <script type="math/tex"><code>light_vertex.vs</code></script>. It just dumps the vertices using the model matrix and a projection matrix. There’s no need to use a view matrix, we don’t need a camera here.</p>
-<p>The fragment shader for point lights <script type="math/tex"><code>point_light_fragment.fs</code></script> is defined like this:</p>
-<pre><code>#version 330
+<p>上述代码是渲染点光源和平行光时使用的顶点着色器（<code>light_vertex.vs</code>）。它只是使用模型矩阵和投影矩阵来转储顶点。不需要使用观察矩阵，因为这里不需要摄像机。</p>
+<p>点光源的片元着色器（<code>point_light_fragment.fs</code>）的定义如下：</p>
+<pre><code class="glsl">#version 330
 
 out vec4 fragColor;
 
@@ -894,8 +905,8 @@ void main()
 }
 </code></pre>
 
-<p>As you can see, it contains functions that should look familiar to you. They were used in previous chapters in the scene fragment shader. The important things here to note are the following lines:</p>
-<pre><code>uniform sampler2D positionsText;
+<p>如你所见，它包含你应该熟悉的函数，它们在前几章的场景片元着色器中使用过。这里需要注意的重要事项如下：</p>
+<pre><code class="glsl">uniform sampler2D positionsText;
 uniform sampler2D diffuseText;
 uniform sampler2D specularText;
 uniform sampler2D normalsText;
@@ -903,14 +914,14 @@ uniform sampler2D shadowText;
 uniform sampler2D depthText;
 </code></pre>
 
-<p>These uniforms model the different textures that compose the G-Buffer. We will use them to access the data. You may be asking now, how do we know which pixel to peek from those textures when we are rendering a fragment? The answer is by using the <code>gl_FragCoord</code> input variable. This variable contains the windows relative coordinates for the current fragment. To transform from that coordinates system to the textures one we use this function:</p>
-<pre><code>vec2 getTextCoord()
+<p>这些Uniform建模构成了G缓冲区的不同纹理。我们将使用它们来访问数据。你现在可能会问，当我们渲染一个片元时，如何知道要从这些纹理中获取哪个像素？答案是使用<code>gl_FragCoord</code>输入变量，此变量储存当前片元与窗口的相对坐标。因为要从坐标系转换为纹理，我们使用以下函数：</p>
+<pre><code class="glsl">vec2 getTextCoord()
 {
     return gl_FragCoord.xy / screenSize;
 }
 </code></pre>
 
-<p>The fragment shader for the directional light is also quite similar, you can check the source code. Now that the shaders have been presented, let’s go back to the <code>Renderer</code> class. For point lights we will do as many passes as lights are, we just bind the shaders used for this type of lights and draw the quad for each of them.</p>
+<p>平行光的片元着色器也很相似，可以查看源代码。现在已经有了着色器，我们回到<code>Renderer</code>类。对于点光源，我们将做尽可能多的光照处理，我们只是绑定用于此类型光源的着色器，并为每个着色器绘制矩形。</p>
 <pre><code class="java">private void renderPointLights(Window window, Camera camera, Scene scene) {
     pointLightShaderProgram.bind();
 
@@ -919,10 +930,10 @@ uniform sampler2D depthText;
     pointLightShaderProgram.setUniform(&quot;modelMatrix&quot;, bufferPassModelMatrix);
     pointLightShaderProgram.setUniform(&quot;projectionMatrix&quot;, projectionMatrix);
 
-    // Specular factor
+    // 镜面反射系数
     pointLightShaderProgram.setUniform(&quot;specularPower&quot;, specularPower);
 
-    // Bind the G-Buffer textures
+    // 绑定G缓冲区纹理
     int[] textureIds = this.gBuffer.getTextureIds();
     int numTextures = textureIds != null ? textureIds.length : 0;
     for (int i=0; i&lt;numTextures; i++) {
@@ -942,7 +953,7 @@ uniform sampler2D depthText;
     PointLight[] pointLights = sceneLight.getPointLightList();
     int numPointLights = pointLights != null ? pointLights.length : 0;
     for(int i=0; i&lt;numPointLights; i++) {
-        // Get a copy of the point light object and transform its position to view coordinates
+        // 获取点光源对象的副本并将其位置转换到观察坐标系
         PointLight currPointLight = new PointLight(pointLights[i]);
         Vector3f lightPos = currPointLight.getPosition();
         tmpVec.set(lightPos, 1);
@@ -959,7 +970,7 @@ uniform sampler2D depthText;
 }
 </code></pre>
 
-<p>The approach is quite similar for directional light. In this case, we just use do one pass:</p>
+<p>对于平行光来说，方法非常相似。在此情况下，我们只进行一次处理：</p>
 <pre><code class="java">private void renderDirectionalLight(Window window, Camera camera, Scene scene) {
     dirLightShaderProgram.bind();
 
@@ -968,10 +979,10 @@ uniform sampler2D depthText;
     dirLightShaderProgram.setUniform(&quot;modelMatrix&quot;, bufferPassModelMatrix);
     dirLightShaderProgram.setUniform(&quot;projectionMatrix&quot;, projectionMatrix);
 
-    // Specular factor
+    // 镜面反射系数
     dirLightShaderProgram.setUniform(&quot;specularPower&quot;, specularPower);
 
-    // Bind the G-Buffer textures
+    // 绑定G缓冲区纹理
     int[] textureIds = this.gBuffer.getTextureIds();
     int numTextures = textureIds != null ? textureIds.length : 0;
     for (int i=0; i&lt;numTextures; i++) {
@@ -987,12 +998,12 @@ uniform sampler2D depthText;
 
     dirLightShaderProgram.setUniform(&quot;screenSize&quot;, (float) gBuffer.getWidth(), (float)gBuffer.getHeight());
 
-    // Ambient light
+    // 环境光照
     SceneLight sceneLight = scene.getSceneLight();
     dirLightShaderProgram.setUniform(&quot;ambientLight&quot;, sceneLight.getAmbientLight());
 
-    // Directional light
-    // Get a copy of the directional light object and transform its position to view coordinates
+    // 平行光
+    // 获取平行光对象的副本并将其位置转换到观察坐标系
     DirectionalLight currDirLight = new DirectionalLight(sceneLight.getDirectionalLight());
     tmpVec.set(currDirLight.getDirection(), 0);
     tmpVec.mul(viewMatrix);
@@ -1005,28 +1016,37 @@ uniform sampler2D depthText;
 }
 </code></pre>
 
-<p>The <code>endLightRendering</code> simply retsores the state.</p>
+<p><code>endLightRendering</code>只简单地恢复状态。</p>
 <pre><code class="java">private void endLightRendering() {
-    // Bind screen for writing
+    // 绑定屏幕以便写入
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glEnable(GL_DEPTH_TEST);
     glDisable(GL_BLEND);
 }
 </code></pre>
 
-<p>If you execute the sample you will see something like this:</p>
-<p><img alt="" src="/chapter28/result.png" /></p>
-<p>This chapter got longer than expected but there are a few key points that need to be clarified:</p>
+<p>如果运行示例，你将看到如下内容：</p>
+<p><img alt="结果" src="../_static/28/result.png" /></p>
+<p>本章比预期时间长，但有几个要点需要澄清：</p>
 <ul>
-<li>Spot lights have been removed in order to simplify this chapter.</li>
-<li>A common technique for point lights used in deferred shading is to calculate the area of the scene affected by that light. In this case, instead of rendering a quad that fills up the screen, you can use a smaller quad, a sphere, etc. Keep in mind that the best is enemy of the good. Performing complex calculus to determine the smallest shape required may be slower than using other coarse approaches.</li>
-<li>If you do not have many lights, this method will be slower than forward shading.</li>
+<li>为了简化本章，已经删除了聚光源的相关内容。</li>
+<li>延迟着色法中使用点光源的一种常见技术是计算受该光源影响的场景区域。在此情况下，你可以使用较小的四边形，圆形等，而不是渲染充满屏幕的矩形。请牢记，最好是好的敌人，进行复杂的微积分以确定所需的最小形状可能比使用其他粗糙方法慢。</li>
+<li>如果没有许多光源，此方法比正向着色法慢。</li>
 </ul>
-<p>As a final note, if you want to see how these techniques are used in real world games, you can check <a href="http://www.adriancourreges.com/blog/2015/11/02/gta-v-graphics-study/" title="GTA V - Graphics Study">this superb explanation</a> about how a GTA V frame gets rendered.</p>
+<p>最后要注意的一点是，如果你想了解这些技术在现实中的应用，可以查看<a href="http://www.adriancourreges.com/blog/2015/11/02/gta-v-graphics-study/" title="GTA V - Graphics Study">这个极好的说明</a>，了解GTA V的帧是如何渲染的。</p>
               
             </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../a01-opengl-debugging/" class="btn btn-neutral float-right" title="附录 A - OpenGL调试">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../27-assimp/" class="btn btn-neutral" title="Assimp库"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>
@@ -1054,6 +1074,10 @@ uniform sampler2D depthText;
           <a href="https://github.com/Mouse0w0/lwjglbook-CN-Translation/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
+        <span><a href="../27-assimp/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../a01-opengl-debugging/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
