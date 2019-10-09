@@ -240,15 +240,13 @@
             <div class="section">
               
                 <h1 id="more-on-rendering">渲染补充（More on Rendering）</h1>
-<p>本章中，我们将继续讨论OpenGL如何渲染物体。为了整理代码，我们要创建一个名为<code>Mesh</code>的新类，把一个坐标数组作为输入，创建VBO和VAO对象，把VBO和VAO对象加载到显卡中。</p>
+<p>本章我们将继续讲述OpenGL如何渲染物体。为了整理代码，我们要创建一个名为<code>Mesh</code>的新类，把一个位置数组作为输入，为需要加载到显卡中的模型创建VBO和VAO对象。</p>
 <pre><code class="java">package org.lwjglb.engine.graph;
 
 import java.nio.FloatBuffer;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.*;
 import org.lwjgl.system.MemoryUtil;
+
+import static org.lwjgl.opengl.GL30.*;
 
 public class Mesh {
 
@@ -304,7 +302,7 @@ public class Mesh {
 }
 </code></pre>
 
-<p>我们将在<code>DummyGame</code>类中实例化<code>Mesh</code>，从<code>Renderer</code>的<code>init</code>方法中删除VAO和VBO代码。在<code>Renderer</code>类的渲染方法中也将接收一个<code>Mesh</code>对象来渲染。<code>cleanup</code>方法也被简化，因为<code>Mesh</code>类已经提供了一个释放VAO和VBO资源的方法。</p>
+<p>我们将在<code>DummyGame</code>类中实例化<code>Mesh</code>，然后将<code>Renderer</code>的<code>init</code>方法中的VAO和VBO代码删除。在<code>Renderer</code>类的渲染方法中将接收一个<code>Mesh</code>对象来渲染。<code>cleanup</code>方法也被简化，因为<code>Mesh</code>类已经提供了一个释放VAO和VBO资源的方法。</p>
 <pre><code class="java">public void render(Mesh mesh) {
     clear();
 
@@ -338,9 +336,9 @@ public void cleanup() {
 <pre><code class="java">glDrawArrays(GL_TRIANGLES, 0, mesh.getVertexCount());
 </code></pre>
 
-<p><code>Mesh</code>类通过将坐标数组除以3来计算顶点的数目（因为我们使用X，Y和Z坐标）。现在，我们可以渲染更复杂的形状。来渲染一个正方形吧。一个正方形可以用两个三角形来组成，如图所示。</p>
-<p><img alt="Quad coordinates" src="../_static/05/quad_coordinates.png" /></p>
-<p>正如你所看到的，这两个三角形中的每一个都由三个顶点组成。第一个三角形由顶点V1、V2和V4（橙色的点）组成，第二个三角形由顶点V4，V2和V3（绿色的点）组成。顶点以逆时针顺序连接，因此要传递的浮点数数组应该是[V1, V2, V4, V4, V2, V3]。因此，<code>DummyGame</code>的<code>init</code>方法将是这样的：</p>
+<p><code>Mesh</code>类通过将位置数组除以3来计算顶点的数目（因为我们使用X，Y和Z坐标）。现在，我们可以渲染更复杂的形状。来试试渲染一个四边形，一个四边形可以用两个三角形来组成，如图所示：</p>
+<p><img alt="四边形坐标" src="../_static/05/quad_coordinates.png" /></p>
+<p>如你所见，这两个三角形中的每一个都由三个顶点组成。第一个三角形由顶点V1、V2和V4（橙色的点）组成，第二个三角形由顶点V4，V2和V3（绿色的点）组成。顶点以逆时针顺序连接，因此要传递的浮点数数组应该是[V1, V2, V4, V4, V2, V3]。因此，<code>DummyGame</code>的<code>init</code>方法将是这样的：</p>
 <pre><code class="java">@Override
 public void init() throws Exception {
     renderer.init();
@@ -356,11 +354,11 @@ public void init() throws Exception {
 }
 </code></pre>
 
-<p>现在你应该可以看到这样一个正方形：</p>
-<p><img alt="Quad rendered" src="../_static/05/quad_rendered.png" /></p>
-<p>我们完成了吗？没有。上面的代码仍然存在一些问题。我们使用了重复的坐标来表示正方形。我们传递了两次V2和V4坐标。这是个小形状，它可能不是什么大问题，但想象一个更复杂的3D模型，我们会多次重复传递坐标。记住，我们使用三个浮点数表示顶点的位置，但稍后我们将需要更多的数据来表示纹理等。考虑到在更复杂的形状中，三角形直接共享的顶点数量可以更高，如图所示（其中顶点可以在六个三角形之间共享）。</p>
-<p><img alt="Dolphin" src="../_static/05/dolphin.png" /></p>
-<p>最后，我们需要更多的内存来储存重复的数据，这就是索引缓冲区（<code>Index Buffer</code>)发挥作用的地方。为了绘制正方形，我们只需要以这样的方式指定每个顶点：V1, V2, V3, V4。每个顶点在数组中都有一个位置。V1在位置0上，V2在位置1上等。</p>
+<p>现在你应该可以看到这样的一个四边形：</p>
+<p><img alt="四边形渲染" src="../_static/05/quad_rendered.png" /></p>
+<p>我们做完了吗？并没有，上述代码仍存在一些问题。我们使用了重复的坐标来表示四边形，传递了两次V2和V4坐标。这是个小图形，它可能不是什么大问题，但想象在一个更复杂的3D模型中，我们会多次重复传递坐标。记住，我们使用三个浮点数表示顶点的位置，但此后将需要更多的数据来表示纹理等。考虑到在更复杂的形状中，三角形直接共享的顶点数量甚至更高，如图所示（其顶点可以在六个三角形之间共享）：</p>
+<p><img alt="海豚" src="../_static/05/dolphin.png" /></p>
+<p>最后，我们需要更多的内存来储存重复的数据，这就是索引缓冲区（<code>Index Buffer</code>）大显身手的时候。为了绘制四边形，我们只需要以这样的方式指定每个顶点：V1, V2, V3, V4。每个顶点在数组中都有一个位置。V1在位置0上，V2在位置1上，等等：</p>
 <table>
 <thead>
 <tr>
@@ -407,7 +405,7 @@ public void init() throws Exception {
     vertexCount = indices.length;
 </code></pre>
 
-<p>在创建了储存坐标的VBO之后，我们需要创建另一个VBO来保存索引。因此，重命名持有坐标的VBO的ID的变量名，并为索引VBO（<code>idxVboId</code>）创建一个ID。创建VBO的过程相似，但现在的类型是<code>GL_ELEMENT_ARRAY_BUFFER</code>。</p>
+<p>在创建了储存位置的VBO之后，我们需要创建另一个VBO来储存索引。因此，重命名储存位置的VBO的ID的变量名，并为索引VBO（<code>idxVboId</code>）创建一个ID。创建VBO的过程相似，但现在的类型是<code>GL_ELEMENT_ARRAY_BUFFER</code>。</p>
 <pre><code class="java">idxVboId = glGenBuffers();
 indicesBuffer = MemoryUtil.memAllocInt(indices.length);
 indicesBuffer.put(indices).flip();
@@ -416,8 +414,8 @@ glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL_STATIC_DRAW);
 memFree(indicesBuffer);
 </code></pre>
 
-<p>因为我们是在处理整数，所有需要创建一个<code>IntBuffer</code>而不是一个<code>FloatBuffer</code>。</p>
-<p>就是这样。现在VAO包含两个VBO，一个储存坐标，另一个储存索引。<code>Mesh</code>类的<code>cleanUp</code>方法也必须考虑到要释放另一个VBO。</p>
+<p>因为我们是在处理整数，所以需要创建一个<code>IntBuffer</code>而不是一个<code>FloatBuffer</code>。</p>
+<p>就是这样。现在VAO包含两个VBO，一个储存位置，另一个储存索引。<code>Mesh</code>类的<code>cleanUp</code>方法也必须考虑到要释放另一个VBO。</p>
 <pre><code class="java">public void cleanUp() {
     glDisableVertexAttribArray(0);
 
@@ -432,7 +430,7 @@ memFree(indicesBuffer);
 }
 </code></pre>
 
-<p>最后，我们需要修改<code>glDrawArrays</code>调用的方法：</p>
+<p>最后，我们需要修改在绘制时调用的<code>glDrawArrays</code>方法：</p>
 <pre><code class="java">glDrawArrays(GL_TRIANGLES, 0, mesh.getVertexCount());
 </code></pre>
 
@@ -441,11 +439,11 @@ memFree(indicesBuffer);
 </code></pre>
 
 <p>方法的参数如下：
-<em> mode: 指定渲染的图元类型，现在是三角形。没有什么变化。
+<em> mode: 指定渲染的图元类型，现在是三角形，没有变化。
 </em> count: 指定要渲染的顶点数。
-<em> type: 指定索引数据的类型。现在是无符号整数型。
+<em> type: 指定索引数据的类型，现在是无符号整数型。
 </em> indices: 指定要开始使用索引渲染的数据偏移量。</p>
-<p>现在可以使用新的和更有效的方法来绘制复杂的模型了，仅需指定索引。</p>
+<p>现在可以使用全新和更有效的方法来绘制复杂的模型了，仅需指定索引。</p>
 <pre><code class="java">public void init() throws Exception {
     renderer.init();
     float[] positions = new float[]{
@@ -461,7 +459,7 @@ memFree(indicesBuffer);
 }
 </code></pre>
 
-<p>现在给示例代码增加颜色吧。我们把另一组浮点数传递给<code>Mesh</code>类，它储存了正方形中每个顶点的颜色。</p>
+<p>现在为示例代码添加颜色吧。我们把另一组浮点数传递给<code>Mesh</code>类，它储存了四边形中每个顶点的颜色。</p>
 <pre><code class="java">public Mesh(float[] positions, float[] colours, int[] indices) {
 </code></pre>
 
@@ -476,8 +474,8 @@ memFree(colourBuffer);
 glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, 0);
 </code></pre>
 
-<p>请注意<code>glVertexAttribPointer</code>方法的调用，第一个参数现在是“1”。这是着色器希望数据的位置。当然，因为增加了一个VBO，所以我们需要在<code>cleanUp</code>方法中释放它。</p>
-<p>下一步是修改着色器。顶点着色器现在需要两个参数，坐标（位置0）和颜色（位置1）。顶点着色器将只输出接收到的颜色，因此这可以由片元着色器处理。</p>
+<p>请注意<code>glVertexAttribPointer</code>方法的调用，第一个参数现在是“1”，这是着色器期望数据的位置。当然，因为增加了一个VBO，所以我们需要在<code>cleanUp</code>方法中释放它。</p>
+<p>接下来是修改着色器。顶点着色器现在需要两个参数，坐标（位置0）和颜色（位置1）。顶点着色器将只输出接收到的颜色，以便片元着色器可以对其进行处理。</p>
 <pre><code class="glsl">#version 330
 
 layout (location=0) in vec3 position;
@@ -492,7 +490,7 @@ void main()
 }
 </code></pre>
 
-<p>现在，片元着色器输入由顶点着色器处理的颜色，并使用它来生成颜色。</p>
+<p>现在，片元着色器接收由顶点着色器处理的颜色，并使用它来生成颜色。</p>
 <pre><code class="glsl">#version 330
 
 in  vec3 exColour;
@@ -504,7 +502,7 @@ void main()
 }
 </code></pre>
 
-<p>最后要做的是修改渲染代码，使其使用第二个数据数组：</p>
+<p>最后要做的是修改渲染代码以使用第二个数据数组：</p>
 <pre><code class="java">public void render(Window window, Mesh mesh) {
     clear();
 
@@ -515,7 +513,7 @@ void main()
 
     shaderProgram.bind();
 
-    // Draw the mesh
+    // 绘制网格
     glBindVertexArray(mesh.getVaoId());
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
@@ -523,7 +521,7 @@ void main()
     // ...
 </code></pre>
 
-<p>你可以看到，在渲染过程中，我们需要启用位于位置1的VAO属性。现在可以把颜色传递给<code>Mesh</code>类，以便给正方形添加颜色。</p>
+<p>在渲染过程中，你可以看到我们需要启用位于位置1的VAO属性。现在可以将如下所示颜色数组传给<code>Mesh</code>类，给四边形添加点颜色。</p>
 <pre><code class="java">float[] colours = new float[]{
     0.5f, 0.0f, 0.0f,
     0.0f, 0.5f, 0.0f,
@@ -532,8 +530,8 @@ void main()
 };
 </code></pre>
 
-<p>然后会得到这样一个色彩鲜艳的正方形。</p>
-<p><img alt="Coloured quad" src="../_static/05/coloured_quad.png" /></p>
+<p>然后会得到一个色彩鲜艳的四边形。</p>
+<p><img alt="色彩鲜艳的四边形" src="../_static/05/coloured_quad.png" /></p>
               
             </div>
           </div>
