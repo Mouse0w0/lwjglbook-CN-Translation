@@ -249,23 +249,23 @@
               
                 <h1 id="transformations">变换（Transformations）</h1>
 <h2 id="_1">投影</h2>
-<p>让我们看到在前一章中创建的漂亮的彩色的正方形。如果仔细看，它更像一个矩形，你甚至可以将窗口的宽度从600像素改为900像素，失真就会更加明显。这发生了什么事呢？</p>
-<p>如果你观察顶点着色器的代码，我们只是直接地传递坐标。换句话说，当一个顶点的X坐标为0.5时，我们对OpenGL说在屏幕的X坐标为0.5的位置绘制它。下图是OpenGL坐标（仅含X和Y轴）。</p>
-<p><img alt="Coordinates" src="../_static/06/coordinates.png" /></p>
-<p>将这些坐标投影到窗口坐标，需要考虑到窗口的大小。因此，如果我们的窗口大小为900x480，OpenGL坐标(1, 0)将被投影到窗口坐标(900, 0)，最终创建一个矩形而不是一个正方形。</p>
-<p><img alt="Rectangle" src="../_static/06/rectangle.png" /></p>
-<p>但是，问题远比这更严重。在0.0到1.0和-1.0之间修改正方形的坐标，你看到了什么？正方形是完全绘制在同一个地方，不管它是否沿着Z轴位移。为什么会发生这种情况？远处的物体应该比近处的物体小，但是我们使用相同的X和Y坐标绘制它们。</p>
-<p>但是，等等。这不应该用Z坐标来处理吗？这是正确的但是又不正确。Z坐标告诉OpenGL对象的远近，但是OpenGL对你的对象的大小一无所知。你可以有两个不同大小的物体，一个更近更小，一个更远更大，而且可以以相同的大小正确地投影到屏幕上（有相同的屏幕X和Y坐标，但Z坐标不同）。OpenGL只使用我们正在传递的坐标，所以必须处理这个问题。我们需要正确地投影坐标。</p>
-<p>既然已经确诊了这个问题，我们该怎么做？答案是使用投影矩阵（<code>Projection Matrix</code>）或截锥体（<code>Frustum</code>）。投影矩阵将处理绘制区域的宽高比（宽度和高度的关系），因此物体不会被扭曲。它也将处理距离，所以较远的物体将会被绘制得更小。投影矩阵还将考虑我们的视野和应该显示的最大距离有多远。</p>
-<p>对于不熟悉矩阵的人，矩阵（<code>Matrix</code>）是以行和列排列的二维数组。矩阵中的每个数字被称为元素。矩阵阶次是行和列的数量。例如，这里是一个2x2矩阵（有2行2列）。</p>
-<p><img alt="2x2 Matrix" src="../_static/06/2_2_matrix.png" /></p>
-<p>矩阵有许多可以使用的基本运算法则（如加法、乘法等），你可以在任何数学书中查阅它们。与三维图形相关的矩阵对空间中点的变换非常有用。</p>
-<p>你可以把投影矩阵想象成一个摄像机，它有一个视野和最小和最大距离。该摄像机的可视区域是一个截断的金字塔。下图展示了该区域的俯视图。</p>
-<p><img alt="Projection Matrix concepts" src="../_static/06/projection_matrix.png" /></p>
-<p>投影矩阵将正确地投影三维坐标，以便它们能够在二维屏幕上正确地显示。该矩阵的数学表示如下（不要害怕）:</p>
-<p><img alt="Projection Matrix" src="../_static/06/projection_matrix_eq.png" /></p>
-<p>其中屏幕宽高比（<code>Aspect Ratio</code>）指的是屏幕宽度与屏幕高度的关系（<script type="math/tex; mode=display">a=width/height</script>）。为了获得给定点的投影坐标，我们只需要将投影矩阵乘以原始坐标，结果将是投影后的另一个向量。</p>
-<p>因此我们需要处理一组数学对象，如向量、矩阵，并要可以对它们进行操作。我们可以选择从头开始编写所有的代码，或者使用已经实现的库。当然我们会选择容易的方法，使用JOML（<code>Java OpenGL Math Library</code>）处理LWJGL内的数学运算。为了使用该库，我们只需要为<code>pom.xml</code>文件添加另一个依赖项。</p>
+<p>让我们回到在前一章中创建的色彩鲜艳的正方形。如果仔细看，它更像一个矩形，你甚至可以将窗口的宽度从600像素改为900像素，失真就会更加明显。这发生了什么呢？</p>
+<p>如果你查看顶点着色器的代码，我们只是直接地传递坐标。换句话说，当一个顶点的X坐标为0.5时，我们让OpenGL在屏幕的X坐标为0.5的位置绘制它。下图展示了OpenGL坐标系（仅含X和Y轴）。</p>
+<p><img alt="坐标" src="../_static/06/coordinates.png" /></p>
+<p>将这些坐标投影到窗口坐标系（其原点位于上图的左上角），需要考虑到窗口的大小。因此，如果我们的窗口大小为900x480，OpenGL坐标(1, 0)将被投影到窗口坐标(900, 0)，最终创建一个矩形而不是一个正方形。</p>
+<p><img alt="矩形" src="../_static/06/rectangle.png" /></p>
+<p>但是，问题远比这更严重。将四边形的Z坐标从0.0修改为1.0和-1.0，你发现了什么？四边形完全是绘制在同一个地方，不管它是否沿着Z轴位移。为什么会发生这种情况？远处的物体应该比近处的物体绘制得更小，但是我们使用相同的X和Y坐标绘制它们。</p>
+<p>但稍等一下，这不应该由Z坐标来处理吗？这半对半错。Z坐标告诉OpenGL一个物体的远近，但是OpenGL对你的物体的大小一无所知。你可以有两个不同大小的物体，一个更近更小，一个更远更大，而且可以以相同的大小正确地投影到屏幕上（有相同的屏幕X和Y坐标，但Z坐标不同）。OpenGL只使用正在传递的坐标，所以我们必须处理这个问题，我们需要正确地投影坐标。</p>
+<p>既然已经确诊了这个问题，该怎么解决呢？答案是使用投影矩阵（Projection Matrix）或截锥体（Frustum）。投影矩阵将处理绘制区域的宽高比（大小与高度之间的关系），这样物体就不会变形。它还可以处理距离，所以较远的物体将会被绘制得更小。投影矩阵还将考虑我们的视野和应该显示的距离有多远。</p>
+<p>对于不熟悉矩阵的人，矩阵（Matrix）是以行和列排列的二维数组。矩阵中的每个数字被称为元素。矩阵阶次是行和列的数量。例如，此处是一个2x2矩阵（有2行2列）。</p>
+<p><img alt="2x2矩阵" src="../_static/06/2_2_matrix.png" /></p>
+<p>矩阵有许多可以应用于它们的基本运算（如加法、乘法等），你可以在数学书中查阅，其中与三维图形相关的矩阵对空间中点的变换非常有用。</p>
+<p>你可以把投影矩阵想象成一个摄像机，它有一个视野和最小和最大距离。该摄像机的可视区域是一个截断的金字塔，下图为该区域的俯视图。</p>
+<p><img alt="投影矩阵概念" src="../_static/06/projection_matrix.png" /></p>
+<p>投影矩阵将正确地投影三维坐标，以便它们能够在二维屏幕上正确地显示。该矩阵的数学表示如下（不要害怕）：</p>
+<p><img alt="投影矩阵" src="../_static/06/projection_matrix_eq.png" /></p>
+<p>其中屏幕宽高比（Aspect Ratio）指的是屏幕宽度与屏幕高度的关系（<script type="math/tex">屏幕宽高比=宽度/高度</script>）。为了获得给定点的投影坐标，只需要将投影矩阵乘以原始坐标，结果是投影后的另一个向量。</p>
+<p>因此，我们需要处理一组数学实体，如向量、矩阵，并包括可以对它们进行的运算。我们可以选择从头开始编写所有的代码，或者使用已实现的库。当然我们会选择容易的方法，使用JOML（Java OpenGL Math Library，Java OpenGL 数学库）处理LWJGL内的数学运算。为了使用该库，我们只需要在<code>pom.xml</code>文件添加另一个依赖项。</p>
 <pre><code class="xml">        &lt;dependency&gt;
             &lt;groupId&gt;org.joml&lt;/groupId&gt;
             &lt;artifactId&gt;joml&lt;/artifactId&gt;
@@ -273,7 +273,7 @@
         &lt;/dependency&gt;
 </code></pre>
 
-<p>然后设定使用的库版本。</p>
+<p>然后设置要使用的库版本。</p>
 <pre><code class="xml">    &lt;properties&gt;
         [...]
         &lt;joml.version&gt;1.9.6&lt;/joml.version&gt;
@@ -281,16 +281,16 @@
     &lt;/properties&gt;
 </code></pre>
 
-<p>现在一切都完事了，让我们创建我们的投影矩阵吧。在<code>Renderer</code>类中创建<code>Matrix4f</code>类（由JOML库提供）的实例。<code>Matrix4f</code>类提供了一个<code>perspective</code>方法来创建投影矩阵。该方法需要以下参数：</p>
+<p>现在一切都准备好了，来定义我们的投影矩阵。在<code>Renderer</code>类中创建<code>Matrix4f</code>类（由JOML库提供）的实例。<code>Matrix4f</code>类提供了一个<code>perspective</code>方法来创建投影矩阵，该方法需要以下参数：</p>
 <ul>
-<li>视野：可视区域的弧度角大小。我们将定义一个储存该值的常数。</li>
+<li>视野：可视区域角的弧度大小，我们将定义一个储存该值的常数。</li>
 <li>屏幕宽高比。</li>
 <li>最近视距（z-near）。</li>
 <li>最远视距（z-far）。</li>
 </ul>
-<p>我们将在<code>init</code>方法中实例化该矩阵，因此需要将引用传递给<code>Window</code>实例以获得窗口大小（你可以在源代码看到它）。代码如下：</p>
+<p>我们将在<code>init</code>方法中实例化该矩阵，因此需要传递对<code>Window</code>实例的阴影以获取窗口大小（你可以查看源代码）。代码如下：</p>
 <pre><code class="java">    /**
-     * Field of View in Radians
+     * 视野弧度
      */
     private static final float FOV = (float) Math.toRadians(60.0f);
 
@@ -307,10 +307,10 @@ projectionMatrix = new Matrix4f().perspective(FOV, aspectRatio,
     Z_NEAR, Z_FAR);
 </code></pre>
 
-<p>现在我们忽略宽高比可以改变（通过调整窗口大小）。这可以在<code>render</code>方法中检查并相应地改变投影矩阵。</p>
-<p>现在有了矩阵，我们如何使用它呢？我们需要在着色器中使用它，并且它应该被应用到所有顶点上。首先，你可能会想到把它捆绑在顶点输入中（就像坐标和颜色那样）。但这样，我们会浪费很多空间，因为投影矩阵在几次渲染期间都不会发生改变。你可能还想在Java代码中用矩阵处理所有顶点。但是，这样我们输入的VBO就是没用的了，这样就不能使用显卡中的处理器资源了。</p>
+<p>现在我们省略宽高比可变的情况（通过调整窗口大小），这可以在<code>render</code>方法中检查并相应地改变投影矩阵。</p>
+<p>现在有了矩阵，该如何使用它呢？我们需要在着色器中使用它，并且它应该被应用到所有顶点上。首先，你可能会想到把它捆绑在顶点输入中（就像坐标和颜色那样）。但这样，我们会浪费很多空间，因为投影矩阵在几次渲染期间都不会发生改变。你可能还想在Java代码中用矩阵处理所有顶点，但这样我们输入的VBO就是没用的了，这样就不能使用显卡中的处理器资源了。</p>
 <p>答案是使用“<code>uniform</code>”。Uniform是着色器可以使用的全局的GLSL变量，我们将使用它与着色器交流。</p>
-<p>所以我们需要修改顶点着色器的代码，并声明一个新的称为<code>projectionMatrix</code>的全局变量，并用它来计算投影位置。</p>
+<p>所以我们需要修改顶点着色器的代码，并声明一个新的名为<code>projectionMatrix</code>的Uniform，并用它来计算投影后的位置。</p>
 <pre><code class="glsl">#version 330
 
 layout (location=0) in vec3 position;
@@ -327,13 +327,13 @@ void main()
 }
 </code></pre>
 
-<p>如上所述，我们把<code>projectionMatrix</code>定义为一个4x4的矩阵，新的坐标是通过把它与原始坐标相乘得到的。现在我们需要把投影矩阵的值传递给着色器。首先，我们需要确定全局变量的位置。</p>
-<p>这是通过调用方法<code>glGetUniformLocation</code>完成的，它有两个参数：</p>
+<p>如上所述，我们把<code>projectionMatrix</code>定义为一个4x4的矩阵，新的坐标是通过把它与原始坐标相乘得到的。现在我们需要把投影矩阵的值传递给着色器，首先需要确定Uniform的位置。</p>
+<p>这是通过调用方法<code>glGetUniformLocation</code>实现的，它有两个参数：</p>
 <ul>
 <li>着色器程序的ID</li>
-<li>全局变量名（它应该与着色器里定义的名称相同）</li>
+<li>Uniform名（它应该与着色器里定义的名称相同）</li>
 </ul>
-<p>此方法返回储存全局变量的ID。由于我们可能有一个以上的全局变量，我们将把这些ID储存在由变量名作为索引的Map中（稍后我们需要那个ID）。因此，在<code>ShaderProgram</code>需要创建一个新的字段来保存这些ID：</p>
+<p>此方法返回储存Uniform位置的ID。由于可能有一个以上的Uniform，我们将把这些ID储存在由变量名作为索引的Map中（此后我们需要那个ID）。因此，在<code>ShaderProgram</code>需要创建一个新的字段来保存这些ID：</p>
 <pre><code class="java">private final Map&lt;String, Integer&gt; uniforms;
 </code></pre>
 
@@ -341,7 +341,7 @@ void main()
 <pre><code class="java">uniforms = new HashMap&lt;&gt;();
 </code></pre>
 
-<p>最后，我们创建一个方法来获得全局变量储存的位置。</p>
+<p>最后，我们创建了一个方法来创建新的Uniform和储存获得的位置。</p>
 <pre><code class="java">public void createUniform(String uniformName) throws Exception {
     int uniformLocation = glGetUniformLocation(programId,
         uniformName);
@@ -353,7 +353,7 @@ void main()
 }
 </code></pre>
 
-<p>现在在着色器程序编译后，我们就可以在<code>Renderer</code>类中调用<code>createUniform</code>方法（现在我们投影矩阵实例化后就调用它）。</p>
+<p>现在，在着色器程序编译后，我们就可以在<code>Renderer</code>类中调用<code>createUniform</code>方法（本例中，我们将在投影矩阵实例化后调用它）。</p>
 <pre><code class="java">shaderProgram.createUniform(&quot;projectionMatrix&quot;);
 </code></pre>
 
