@@ -357,10 +357,10 @@ void main()
 <pre><code class="java">shaderProgram.createUniform(&quot;projectionMatrix&quot;);
 </code></pre>
 
-<p>现在，我们已经准备好一个可以储存投影矩阵数据的储存器。由于投影矩阵在渲染期间不会改变，所以可以在创建后直接设置值。但是我们将在<code>render</code>方法中做这件事。稍后你可以看到，我们可以重用该全局变量来做额外的事情，这些事情需要在每次渲染调用中完成。</p>
-<p>我们将在<code>ShaderProgram</code>类中创建另一个方法来设置数据，称为<code>setUniform</code>。我们通过使用JOML库提供的实用方法将矩阵转换成4x4的<code>FloatBuffer</code>对象，并将它们发送到全局变量中。</p>
+<p>此时，我们已经准备好一个可以储存投影矩阵数据的储存器。由于投影矩阵在渲染期间不会变化，所以可以在创建Uniform后直接设置值，但我们将在<code>render</code>方法中做此事。稍后你可以看到，我们可以重用该Uniform来执行每次渲染调用中需要执行的其他操作。</p>
+<p>我们将在<code>ShaderProgram</code>类中创建另一个名为<code>setUniform</code>的方法来设置数据，通过使用JOML库提供的实用方法将矩阵转换为4x4的<code>FloatBuffer</code>对象，并将它们发送到Uniform中。</p>
 <pre><code class="java">public void setUniform(String uniformName, Matrix4f value) {
-    // Dump the matrix into a float buffer
+    // 转储矩阵到FloatBuffer
     try (MemoryStack stack = MemoryStack.stackPush()) {
         FloatBuffer fb = stack.mallocFloat(16);
         value.get(fb);
@@ -369,12 +369,12 @@ void main()
 }
 </code></pre>
 
-<p>正如你看到的，我们以不同的方式创建缓冲区。我们使用的是自动管理缓冲区，并将它们分配到堆栈上。这是因为这个缓冲区是大小很小，而且它在本方法外不被使用。因此，我们使用<code>MemoryStack</code>类。</p>
-<p>现在，在着色器绑定之后，<code>Renderer</code>类中的<code>render</code>方法可以使用该方法。</p>
+<p>如你所见，我们用与此前不同的方式创建缓冲区。我们使用的是自动管理的缓冲区，并将它们分配到堆栈上。这是因为这个缓冲区的大小很小，并且在该方法之外不会使用它。因此我们使用<code>MemoryStack</code>类。</p>
+<p>现在，在着色器绑定之后，可以在<code>Renderer</code>类的<code>render</code>方法中调用该方法：</p>
 <pre><code class="java">shaderProgram.setUniform(&quot;projectionMatrix&quot;, projectionMatrix);
 </code></pre>
 
-<p>我们快要完成了。现在我们可以正确地渲染正方形。所以现在可以启动你的程序，然后得到一个...黑色背景上没有任何彩色正方形。发生了什么？我们弄糟了什么吗？实际上没有任何问题。记住我们正在模拟摄像机观察场景的效果。我们提供了两个距离，一个是最远视距（1000f）和一个最近视距（0.01f）。而我们的坐标是：</p>
+<p>我们就要完成了，现在可以正确地渲染四边形，所以现在可以启动程序，然后得到一个...黑色背景，没有任何彩色四边形。发生了什么？我们把什么弄坏了吗？实际上没有任何问题。记住我们正在模拟摄像机观察场景的效果。我们提供了两个距离，一个是最远视距（1000f）和一个最近视距（0.01f）。而我们的坐标是：</p>
 <pre><code class="java">float[] positions = new float[]{
     -0.5f,  0.5f, 0.0f,
     -0.5f, -0.5f, 0.0f,
@@ -383,35 +383,36 @@ void main()
 };
 </code></pre>
 
-<p>也就是说，我们坐标中的Z坐标在可视区域之外。给它们赋值为-0.05f。现在你会看到像这样的一个巨大的绿色矩形：</p>
-<p><img alt="Square 1" src="../_static/06/square_1.png" /></p>
-<p>这是因为，我们正绘制出离摄像机机太近的正方形。我们实际上是在放大它。如果现在把一个<code>-1.05f</code>的值赋值给Z坐标，就可以看到彩色正方形了。</p>
-<p><img alt="Square coloured" src="../_static/06/square_coloured.png" /></p>
-<p>如果继续向后移动正方形，我们会看到它变小了。还要注意到正方形不再像矩形了。</p>
+<p>也就是说，我们坐标中的Z坐标位于可视区域之外。将它们赋值为-0.05f，现在你会看到像这样的一个巨大的绿色正方形：</p>
+<p><img alt="正方形1" src="../_static/06/square_1.png" /></p>
+<p>这是因为，我们正绘制出离摄像机太近的正方形，实际上是在放大它。如果现在把一个<code>-1.05f</code>的值赋值给Z坐标，就可以看到彩色正方形了。</p>
+<p><img alt="彩色正方形" src="../_static/06/square_coloured.png" /></p>
+<p>如果继续向后移动四边形，我们会看到它变小了。还要注意到四边形不再像矩形了。</p>
 <h2 id="_2">使用变换</h2>
-<p>让我们回想一下到目前为止我们都做了什么。我们已经学会了如何将数据以有效的格式传递给显卡，以及如何使用顶点和片元着色器来投影这些顶点并设置它们的颜色。现在应该开始在三维空间中绘制更复杂的模型了。但为了做到这件事，我们必须能够加载模型，并在指定的位置以适当的大小和所需的旋转将它渲染在三维空间中。</p>
-<p>现在为了实现这种渲染，我们需要提供一些基本操作来操作模型：</p>
+<p>回想一下到目前为止我们都做了什么。我们已经学会了如何将数据以有效的格式传递给显卡，以及如何使用顶点和片元着色器来投影这些顶点并设置它们的颜色。现在应该开始在三维空间中绘制更复杂的模型了，但为了做到它，我们必须能够加载模型，并在指定的位置以适当的大小和所需的旋转将它渲染在三维空间中。</p>
+<p>现在为了实现这样的渲染，我们需要提供一些基本操作来操作模型：</p>
 <ul>
-<li>移动(<code>translation</code>): 在三个轴中的任意一个轴上移动一个物体。</li>
-<li>旋转(<code>Rotation</code>): 按任意一个轴旋转物体任意角度。</li>
-<li>缩放(<code>Scale</code>): 调整物体的大小。</li>
+<li>位移（Translation）: 在三个轴中的任意一个轴上移动一个物体。</li>
+<li>旋转（Rotation）: 按任意一个轴旋转物体任意角度。</li>
+<li>缩放（Scale）: 调整物体的大小。</li>
 </ul>
-<p><img alt="Transformations" src="../_static/06/transformations.png" /></p>
-<p>上面的操作统称为变换（<code>Transformation</code>）。你可能猜到要实现这一点的方法是把坐标乘以一组矩阵（一个用于移动，一个用于旋转，一个用于缩放）。这三个矩阵将被组合成一个称为“世界矩阵”的矩阵，并作为一个全局变量传递给顶点着色器。</p>
-<p>之所以被称为世界矩阵是因为我们正在从模型坐标转换为世界坐标。当学习加载3D模型时，你会发现这些模型是在它们自己的坐标系中定义的。它们不知道你的三维空间的大小，但它们需要在里面渲染。因此，当我们用矩阵乘以坐标时，实际上做的是从一个坐标系（模型坐标系）转换到另一个坐标系（三维世界坐标系）。</p>
+<p><img alt="变换" src="../_static/06/transformations.png" /></p>
+<p>上面的操作统称为变换（Transformation）。你可能猜到要实现这一点的方法是把坐标乘以一组矩阵（一个用于移动，一个用于旋转，一个用于缩放）。这三个矩阵将被组合成一个称为“世界矩阵”的矩阵，并作为一个Uniform传递给顶点着色器。</p>
+<p>之所以被称为世界矩阵，是因为我们正在将模型坐标转换为世界坐标。当学习加载3D模型时，你会发现这些模型是在它们自己的坐标系中定义的，它们不知道你的三维空间的大小，但它们需要在里面渲染。因此，当我们用矩阵乘以坐标时，实际上做的是从一个坐标系（模型坐标系）转换到另一个坐标系（三维世界坐标系）。</p>
 <p>世界矩阵应该这样计算（顺序很重要，因为乘法交换律不适用于矩阵）:</p>
 <p>
-<script type="math/tex; mode=display">
-World Matrix\left[Translation Matrix\right]\left[Rotation Matrix\right]\left[Scale Matrix\right]
-</script>
+<script type="math/tex; mode=display">世界矩阵=\left[位移矩阵\right]\left[旋转矩阵\right]\left[缩放矩阵\right]</script>
 </p>
 <p>如果把投影矩阵包含在变换矩阵中，它会是这样的：</p>
 <p>
 <script type="math/tex; mode=display">
-Transf=\left[Proj Matrix\right]\left[Translation Matrix\right]\left[Rotation Matrix\right]\left[Scale Matrix\right]=\left[Proj Matrix\right]\left[World Matrix\right]
+\begin{array}{lcl}
+Transf & = & \left[投影矩阵\right]\left[位移矩阵\right]\left[旋转矩阵\right]\left[缩放矩阵\right] \\
+ & = & \left[投影矩阵\right]\left[世界矩阵\right]
+\end{array}
 </script>
 </p>
-<p>变换矩阵是这样的：</p>
+<p>位移矩阵是这样定义的：</p>
 <p>
 <script type="math/tex; mode=display">
 \begin{bmatrix}
@@ -422,7 +423,7 @@ Transf=\left[Proj Matrix\right]\left[Translation Matrix\right]\left[Rotation Mat
 \end{bmatrix}
 </script>
 </p>
-<p>位移矩阵参数如下：</p>
+<p>位移矩阵的参数如下：</p>
 <ul>
 <li>dx: 沿X轴位移。</li>
 <li>dy: 沿Y轴位移。</li>
@@ -439,15 +440,15 @@ sx & 0 & 0 & 0 \\
 \end{bmatrix}
 </script>
 </p>
-<p>缩放矩阵参数如下：</p>
+<p>缩放矩阵的参数如下：</p>
 <ul>
 <li>sx: 沿着X轴缩放。</li>
 <li>sy: 沿着Y轴缩放。</li>
 <li>sz: 沿着Z轴缩放。</li>
 </ul>
 <p>旋转矩阵要复杂得多，但请记住，它可以由每个绕单独的轴旋转的旋转矩阵相乘得到。</p>
-<p>现在，为了实践这些理论，我们需要重构代码一点点。在游戏中，我们将加载一组模型，用来根据游戏逻辑在不同的位置渲染许多对象（想象一个FPS游戏，它载入了三个不同敌人的模型。确实只有三个模型，但使用这些模型，我们可以渲染想要的任意数量的敌人）。我们需要为每个对象创建一个VAO和一组VBO吗？答案是否定的，只需要每个模型加载一次就行。我们需要做的是根据它的位置，大小和旋转来独立绘制它。当渲染这些模型时，我们需要对它们进行变换。</p>
-<p>因此，我们将创建一个名为<code>GameItem</code>的新类，该类将模型加载到<code>Mesh</code>实例中。一个<code>GameItem</code>实例将由变量储存它的位置、旋转状态和大小。这个就是这个类的定义。</p>
+<p>现在，为了实践这些理论，我们需要重构代码一点点。在游戏中，我们将加载一组模型，用来根据游戏逻辑在不同的位置渲染许多物体（想象一个FPS游戏，它载入了三个不同敌人的模型。确实只有三个模型，但使用这些模型，我们可以渲染想要的任意数量的敌人）。我们需要为每个对象创建一个VAO和一组VBO吗？答案是不需要，只需要每个模型加载一次就行。我们需要做的是根据它的位置，大小和旋转来独立地绘制它。当渲染这些模型时，我们需要对它们进行变换。</p>
+<p>因此，我们将创建一个名为<code>GameItem</code>的新类，该类将模型加载到<code>Mesh</code>实例中。一个<code>GameItem</code>实例将由变量储存它的位置、旋转状态和缩放。如下是该类的定义。</p>
 <pre><code class="java">package org.lwjglb.engine;
 
 import org.joml.Vector3f;
@@ -539,16 +540,16 @@ public class Transformation {
 }
 </code></pre>
 
-<p>正如你所看到的，这个类把投影矩阵和世界矩阵结合起来。给定一组参数来进行位移、旋转和缩放，然后返回世界矩阵。<code>getWorldMatrix</code>返回的结果将为每个<code>GameItem</code>实例转换坐标。该类还提供了获得投影矩阵的方法。</p>
-<p>需要注意的一件事是，<code>Matrix4f</code>类的<code>mul</code>方法修改了该实例的内容。因此，如果直接将投影矩阵与变换矩阵相乘，我们会修改投影矩阵本身。这就是为什么总是在每次调用时将每个矩阵初始化为单位矩阵。</p>
+<p>如你所见，这个类把投影矩阵和世界矩阵组合起来。给定一组参数来进行位移、旋转和缩放，然后返回世界矩阵。<code>getWorldMatrix</code>返回的结果将为每个<code>GameItem</code>实例变换坐标。该类还提供了获得投影矩阵的方法。</p>
+<p>需要注意的一件事是，<code>Matrix4f</code>类的<code>mul</code>方法修改了该实例的内容。因此，如果直接将投影矩阵与变换矩阵相乘，我们会修改投影矩阵本身，这就是为什么总是在每次调用时将每个矩阵初始化为单位矩阵。</p>
 <p>在<code>Renderer</code>类的构造方法中，我们仅实例化了没有任何参数的<code>Transformation</code>类，而在<code>init</code>方法中，我们只创建了Uniform。</p>
 <pre><code class="java">public Renderer() {
     transformation = new Transformation();
 }
 
 public void init(Window window) throws Exception {
-    // .... Some code before ...
-    // Create uniforms for world and projection matrices
+    // ... 此前的一些代码 ...
+    // 为世界矩阵和投影矩阵创建Uniform
     shaderProgram.createUniform(&quot;projectionMatrix&quot;);
     shaderProgram.createUniform(&quot;worldMatrix&quot;);
 
@@ -567,20 +568,20 @@ public void init(Window window) throws Exception {
 
     shaderProgram.bind();
 
-    // Update projection Matrix
+    // 更新投影矩阵
     Matrix4f projectionMatrix = transformation.getProjectionMatrix(FOV, window.getWidth(), window.getHeight(), Z_NEAR, Z_FAR);
     shaderProgram.setUniform(&quot;projectionMatrix&quot;, projectionMatrix);        
 
-    // Render each gameItem
+    // 渲染每一个游戏项
     for(GameItem gameItem : gameItems) {
-        // Set world matrix for this item
+        // 为该项设置世界矩阵
         Matrix4f worldMatrix =
             transformation.getWorldMatrix(
                 gameItem.getPosition(),
                 gameItem.getRotation(),
                 gameItem.getScale());
         shaderProgram.setUniform(&quot;worldMatrix&quot;, worldMatrix);
-        // Render the mes for this game item
+        // 为该游戏项渲染网格
         gameItem.getMesh().render();
     }
 
@@ -588,9 +589,8 @@ public void init(Window window) throws Exception {
 }
 </code></pre>
 
-<p>每次调用<code>render</code>时就更新投影矩阵一次。这样，我们可以处理窗口大小的调整。然后，我们遍历<code>GameItem</code>数组，并根据它们各自的位置、旋转和大小创建变换矩阵。这个矩阵将被传递到着色器并绘制<code>Mesh</code>。投影矩阵对于所有要渲染的项目都是相同的。这就是为什么它在<code>Transformation</code>类中是单独一个变量的原因。</p>
-<p>我们将渲染代码移动到<code>Mesh</code>类中。
-We moved the rendering code to draw a Mesh to this class:</p>
+<p>每次调用<code>render</code>时就更新投影矩阵一次，这样我们可以处理窗口大小的调整操作。然后我们遍历<code>GameItem</code>数组，并根据它们各自的位置、旋转和缩放创建变换矩阵，该矩阵将被传递到着色器并绘制<code>Mesh</code>。投影矩阵对于所有要渲染的项目都是相同的，这就是为什么它在<code>Transformation</code>类中是单独一个变量的原因。</p>
+<p>我们将渲染代码移动到<code>Mesh</code>类中：</p>
 <pre><code class="java">public void render() {
     // 绘制Mesh
     glBindVertexArray(getVaoId());
@@ -606,7 +606,7 @@ We moved the rendering code to draw a Mesh to this class:</p>
 }
 </code></pre>
 
-<p>顶点着色器只需简单地添加一个新的<code>worldMatrix</code>变量，然后用它与<code>projectionMatrix</code>一同计算坐标：</p>
+<p>顶点着色器只需简单地添加一个新的<code>worldMatrix</code>矩阵，然后用它与<code>projectionMatrix</code>一同计算坐标：</p>
 <pre><code class="glsl">#version 330
 
 layout (location=0) in vec3 position;
@@ -624,10 +624,10 @@ void main()
 }
 </code></pre>
 
-<p>正如你所看到的，代码完全一样。我们使用Uniform来正确地计算坐标，并且考虑截锥、位置、大小和旋转等。</p>
-<p>另外一个重要的问题是，为什么不使用位移、旋转和缩放矩阵，而是把它们组合成一个世界矩阵？原因是我们应该尽量减少在着色器中使用的矩阵。还要记住，在着色器中所做的矩阵乘法是每个顶点一次。投影矩阵在渲染调用期间不会改变，而每一个<code>GameItem</code>实例的世界矩阵也不会改变。如果我们独立位移、旋转和缩放矩阵，我们要做更多的矩阵乘法运算。想象一个有超多顶点的模型，这是很多余的操作。</p>
-<p>但你现在可能会想，如果每个<code>GameItem</code>中的世界矩阵都不会发生变化，为什么不在Java类中做矩阵乘法？我们将投影矩阵和世界矩阵与每个<code>GameItem</code>相乘，把它们作为一个Uniform，这种情况下，我们确实能节省更多的操作。但是，当我们向游戏引擎中添加更多的特性时，我们需要在着色器中使用世界坐标，所以最好以独立的方式处理这两个矩阵。</p>
-<p>最后只需要修改一下<code>DummyGame</code>类，创建一个<code>GameItem</code>实例，让其与<code>Mesh</code>关联，并添加一些操作来位移，旋转和缩放正方形。因为这只是个测试示例，所有没有添加太多，你可以在本书的源代码中找到相关内容。</p>
+<p>如你所见，代码完全一致。我们使用Uniform来正确地投影坐标，并且考虑截锥、位置、缩放和旋转等。</p>
+<p>另外一个重要的问题是，为什么不直接使用位移、旋转和缩放矩阵，而是把它们组合成一个世界矩阵呢？原因是我们应该尽量减少在着色器中使用的矩阵。还要记住，在着色器中所做的矩阵乘法是每个顶点一次，投影矩阵在渲染调用期间不会改变，而每一个<code>GameItem</code>实例的世界矩阵也不会改变。如果独立位移、旋转和缩放矩阵，我们要做更多的矩阵乘法运算。在一个有超多顶点的模型中，这是很多余的操作。</p>
+<p>但你现在可能会想，如果每个<code>GameItem</code>中的世界矩阵都不会发生变化，为什么不在Java类中做矩阵乘法？我们将投影矩阵和世界矩阵与每个<code>GameItem</code>相乘，把它们作为一个Uniform，在此情况下，我们确实能省下更多的操作。但当我们向游戏引擎中添加更多的特性时，我们需要在着色器中使用世界坐标，所以最好独立地处理这两个矩阵。</p>
+<p>最后只需要修改<code>DummyGame</code>类，创建一个<code>GameItem</code>实例，让其与<code>Mesh</code>关联，并添加一些逻辑来位移、旋转和缩放四边形。因为这只是个测试示例，没有添加太多内容，所以你可以在本书的源代码中找到相关代码。</p>
               
             </div>
           </div>
