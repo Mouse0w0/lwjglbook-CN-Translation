@@ -269,20 +269,27 @@
 <p><strong>四边形（Quad）：</strong> 可由两个三角形组成的几何形状，由四个顶点组成。</p>
 <p><strong>网格（Mesh）：</strong> 游戏开发中常见概念之一，通常用于包装顶点数组对象（VAO），储存模型的位置、顶点索引、颜色等数据。</p>
 <p><strong>索引缓冲区（Index Buffer）：</strong> 用于指定顶点绘制顺序的缓冲区。</p>
-<p><strong>投影矩阵（Projection Matrix）：</strong></p>
-<p><strong>截锥体（Frustum）：</strong></p>
-<p><strong>矩阵（Matrix）：</strong></p>
+<p><strong>投影矩阵（Projection Matrix）：</strong> 将顶点从三维世界空间投影到二维屏幕空间的矩阵。</p>
+<p><strong>截锥体（Frustum）：</strong> 三维几何体的一种，又称为棱台。在游戏引擎中通常为四棱台。</p>
+<p><strong>矩阵（Matrix）：</strong> 矩阵是以行和列排列的二维数组，在游戏引擎中通常用于变换三维空间中的点。</p>
 <p><strong>宽高比（Aspect Ratio）：</strong> 高度与宽度之比。</p>
 <p><strong>JOML（Java OpenGL Math Library）：</strong> Java OpenGL 数学库，提供了对OpenGL的一系列常用数学实体的封装。</p>
 <p><strong>Uniform：</strong> Uniform是着色器可以使用的全局的GLSL变量。</p>
-<p><strong>位移（Translation）：</strong></p>
-<p><strong>旋转（Rotation）：</strong></p>
-<p><strong>缩放（Scale）：</strong></p>
-<p><strong>变换（Transformation）：</strong></p>
-<p><strong>世界矩阵（World Matrix）：</strong></p>
-<p><strong>位移矩阵（Translation Matrix）：</strong></p>
-<p><strong>旋转矩阵（Rotation Matrix）：</strong></p>
-<p><strong>缩放矩阵（Scale Matrix）：</strong></p>
+<p><strong>位移（Translation）：</strong> 在三个轴中的任意一个轴上移动一个物体。</p>
+<p><strong>旋转（Rotation）：</strong> 按任意一个轴旋转物体任意角度。</p>
+<p><strong>缩放（Scale）：</strong> 调整物体的大小。</p>
+<p><strong>变换（Transformation）：</strong> 位移、旋转和缩放三者的统称。</p>
+<p><strong>世界矩阵（World Matrix）：</strong> 将物体或模型从模型坐标空间变换到世界坐标空间的矩阵，由位移矩阵、旋转矩阵和缩放矩阵相乘所得。</p>
+<p><strong>位移矩阵（Translation Matrix）：</strong> 可对三维坐标进行位移变换的矩阵。</p>
+<p><strong>旋转矩阵（Rotation Matrix）：</strong> 可对三维坐标进行旋转变换的矩阵。</p>
+<p><strong>缩放矩阵（Scale Matrix）：</strong> 可对三维坐标进行缩放变换的矩阵。</p>
+<p><strong>深度测试（Depth Test）：</strong> 对片元进行深度测试，丢弃距离屏幕较远的片元。</p>
+<p><strong>纹理（Texture）：</strong> 用于绘制模型的像素的图像。</p>
+<p><strong>多级渐远纹理（Mipmap）：</strong> 对于距离屏幕较远的像素，将使用细节较低的纹理进行绘制。多级渐远纹理可解决由于距离问题而导致的远处像素闪烁问题。</p>
+<p><strong>纹理坐标（Texture Coordinate）：</strong> 通常只有两个分量，用于指定片元在纹理上的位置。</p>
+<p><strong>纹理单元（Texture Unit）：</strong> 用于储存纹理的空间。</p>
+<p><strong>取样器（Sampler）：</strong> Uniform类型之一，用于指定被取样的纹理。</p>
+<p><strong>混合（Blend）：</strong> OpenGL功能之一，用于渲染透明或半透明物体，将其片元与其后片元的颜色进行混合。</p>
               
             </div>
           </div>
