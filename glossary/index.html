@@ -259,7 +259,7 @@
 <p><strong>三角形（Triangle）：</strong> 显卡的基本工作单元之一，最简单的二维几何形状。</p>
 <p><strong>光栅化（Rasterization）：</strong> 图形管线阶段之一，此阶段将几何处理阶段生成的三角形剪辑并将其转换为像素大小的片元。</p>
 <p><strong>片元处理阶段（Fragment Processing）：</strong> 图形管线阶段之一，生成写入到帧缓冲区的像素的最终颜色。</p>
-<p><strong>片元（Fragment）：</strong> 组成帧的最小单位，通常相当于一个像素的大小。</p>
+<p><strong>片元（Fragment）：</strong> 组成帧的最小单位，通常相当于一个像素的大小，可认为其即是像素（Pixel）。</p>
 <p><strong>片元着色器（Fragment Shader）：</strong> 着色器之一，用于生成写入到帧缓冲区的像素的最终颜色。</p>
 <p><strong>帧缓冲区（Framebuffer）：</strong> 用于储存图形管线的输出，由多个像素组成的数据结构。</p>
 <p><strong>OpenGL着色器语言（GLSL）：</strong> 用于编写OpenGL着色器的类C语言。</p>
@@ -297,8 +297,16 @@
 <p><strong>观察矩阵（View Matrix）：</strong> 用于将顶点向摄像机所在位置的相反方向和旋转状态变换的矩阵。</p>
 <p><strong>模型观察矩阵（Model View Matrix）：</strong> 是观察矩阵与世界矩阵组合，可将模型空间的坐标变换到摄像机空间中的坐标，用于简化计算。</p>
 <p><strong>OBJ（.obj）：</strong> Wavefront Technologies开发的一种几何定义开放文件格式，现已被广泛采用。</p>
-<p><strong>法线（Normal）：</strong> 一个平面的法线是一个垂直于该平面的长度为1的向量。</p>
+<p><strong>法线（Normal）：</strong> 一个平面的法线是一个垂直于该平面的向量。</p>
+<p><strong>归一化（Normalize）：</strong> 使向量的长度（或模长）为1。</p>
 <p><strong>顶点法线（Vertex Normal）：</strong> 一个顶点的法线是其参与组成的三角形的面的法线的组合，其长度仍为1。</p>
+<p><strong>点光源（Point Light）：</strong> 这种光源模拟的是一个由点向空间各个方向均匀散射的光源。</p>
+<p><strong>聚光源（Spot Light）：</strong> 这种光源模拟从空间中的点发射的光源，但不是在所有方向上发射，而是限定在了一个锥形方向上。</p>
+<p><strong>平行光源（Directional Light）：</strong> 这种光源模拟了太阳光，3D场景中的所有物体都会受到来自特定方向的平行光线的照射。无论物体是近抑或是远，光线总是以一定角度照射在物体上的。</p>
+<p><strong>环境光（Ambient Light）：</strong> 这种类型的光源来自空间的任何地方，并以相同的强度照亮所有物体。</p>
+<p><strong>环境光（Ambient Light）：</strong> 模拟来自任何方向的光照，它将照亮（需要对应强度值）未受任何光线照射的区域，就像背景光。</p>
+<p><strong>漫反射（Diffuse Reflectance）：</strong> 考虑到面向光源的表面更亮。</p>
+<p><strong>镜面反射（Specular Reflectance）：</strong> 模拟光线在抛光或金属表面上的反射。</p>
               
             </div>
           </div>
