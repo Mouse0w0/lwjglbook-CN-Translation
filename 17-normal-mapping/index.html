@@ -7,13 +7,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta name="author" content="Mouse0w0">
+  
   <link rel="shortcut icon" href="../img/favicon.ico">
   <title>法线贴图 - Lwjglbook中文翻译</title>
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
 
-  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
   
   <script>
     // Current page data
@@ -24,7 +25,7 @@
   
   <script src="../js/jquery-2.1.1.min.js" defer></script>
   <script src="../js/modernizr-2.8.3.min.js" defer></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script> 
   
 </head>
@@ -35,6 +36,7 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
         <a href=".." class="icon icon-home"> Lwjglbook中文翻译</a>
         <div role="search">
@@ -45,168 +47,130 @@
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-	<ul class="current">
-	  
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../01-first-steps/">事前准备</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../02-the-game-loop/">游戏循环</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../03-a-brief-about-coordinates/">坐标简介</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../04-rendering/">渲染</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../05-more-on-rendering/">渲染补充</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../06-transformations/">变换</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../07-textures/">纹理</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../08-camera/">摄像机</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../09-loading-more-complex-models/">加载更复杂的模型</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../10-let-there-be-light/">要有光</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../11-let-there-be-even-more-light/">要有更多的光</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../12-game-hud/">游戏HUD</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../13-sky-box-and-some-optimizations/">天空盒与一些优化</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../14-height-maps/">高度图</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../15-terrain-collisions/">地形碰撞</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../16-fog/">雾</a>
-	    </li>
-          
-            <li class="toctree-l1 current">
-		
-    <a class="current" href="./">法线贴图</a>
-    <ul class="subnav">
-            
-    <li class="toctree-l2"><a href="#normal-mapping">法线贴图（Normal Mapping）</a></li>
-    
-
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../01-first-steps/">事前准备</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../02-the-game-loop/">游戏循环</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../03-a-brief-about-coordinates/">坐标简介</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../04-rendering/">渲染</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../05-more-on-rendering/">渲染补充</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../06-transformations/">变换</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../07-textures/">纹理</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../08-camera/">摄像机</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../09-loading-more-complex-models/">加载更复杂的模型</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../10-let-there-be-light/">要有光</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../11-let-there-be-even-more-light/">要有更多的光</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../12-game-hud/">游戏HUD</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../13-sky-box-and-some-optimizations/">天空盒与一些优化</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../14-height-maps/">高度图</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../15-terrain-collisions/">地形碰撞</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../16-fog/">雾</a>
+                    </li>
+                </ul>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">法线贴图</a>
+    <ul class="current">
     </ul>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../18-shadows/">阴影</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../19-animations/">动画</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../20-particles/">粒子</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../21-instanced-rendering/">实例化渲染</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../22-audio/">音效</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../23-3d-object-picking/">三维物体选取</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../24-hud-revisited/">回顾HUD - NanoVG</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../25-optimizations-frustum-culling/">优化 - 截锥剔除</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../26-cascaded-shadow-maps/">级联阴影映射</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../27-assimp/">Assimp库</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../28-deferred-shading/">延迟着色法</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../a01-opengl-debugging/">附录 A - OpenGL调试</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../glossary/">术语表</a>
-	    </li>
-          
-        </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../18-shadows/">阴影</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../19-animations/">动画</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../20-particles/">粒子</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../21-instanced-rendering/">实例化渲染</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../22-audio/">音效</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../23-3d-object-picking/">三维物体选取</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../24-hud-revisited/">回顾HUD - NanoVG</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../25-optimizations-frustum-culling/">优化 - 截锥剔除</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../26-cascaded-shadow-maps/">级联阴影映射</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../27-assimp/">Assimp库</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../28-deferred-shading/">延迟着色法</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../a01-opengl-debugging/">附录 A - OpenGL调试</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../glossary/">术语表</a>
+                    </li>
+                </ul>
       </div>
-      &nbsp;
+    </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -234,6 +198,7 @@
       
     </li>
   </ul>
+  
   <hr/>
 </div>
           <div role="main">
@@ -336,10 +301,10 @@ void main()
 </code></pre>
 
 <p>该函数有以下参数：
-<em> <code>Material</code>实例。
-</em> 顶点法线。
-<em> 纹理坐标。
-</em> 模型视图矩阵。</p>
+* <code>Material</code>实例。
+* 顶点法线。
+* 纹理坐标。
+* 模型视图矩阵。</p>
 <p>我们在此函数中做的第一件事是检查这个<code>Material</code>实例是否有法线贴图。如果没有，我们就像平常一样简单地使用顶点法线。如果它有法线贴图，我们使用储存着法线数据的法线纹理关联到当前纹理坐标。</p>
 <p>记住我们取得的颜色是法线坐标，但因为它们被储存为RGB值，所以它们的值在范围<script type="math/tex; mode=display">0, 1</script>中。我们需要将其范围转换为<script type="math/tex; mode=display">-1, 1</script>，所以我们将其乘以2然后减去1。然后，我们将它归一化，并将其转换到模型观察坐标系（就像顶点法线那样）。</p>
 <p>就这样，我们可以使用返回值作为片元所有光照计算中的法线。</p>
@@ -409,7 +374,7 @@ sceneShaderProgram.setUniform(&quot;normalMap&quot;, 1);
     
   </div>
 
-  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
       
         </div>
@@ -419,7 +384,7 @@ sceneShaderProgram.setUniform(&quot;normalMap&quot;, 1);
 
   </div>
 
-  <div class="rst-versions" role="note" style="cursor: pointer">
+  <div class="rst-versions" role="note" aria-label="versions">
     <span class="rst-current-version" data-toggle="rst-current-version">
       
           <a href="https://github.com/Mouse0w0/lwjglbook-CN-Translation/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
@@ -436,6 +401,11 @@ sceneShaderProgram.setUniform(&quot;normalMap&quot;, 1);
     <script src="../js/theme.js" defer></script>
       <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" defer></script>
       <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
 
 </body>
 </html>
